@@ -1,0 +1,753 @@
+#
+# LSST Data Management System
+# Copyright 2017 LSST Corporation.
+#
+# This product includes software developed by the
+# LSST Project (http://www.lsst.org/).
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the LSST License Statement and
+# the GNU General Public License along with this program.  If not,
+# see <http://www.lsstcorp.org/LegalNotices/>.
+#
+#
+--- # comCam
+#
+# There are nine ccds with names "S00".."S22" and IDs 0..8
+# Each has sixteen amplifiers with names like "00".."07" and "10".."17"
+
+name : "comCam"
+plateScale : 13.55                      # plate scale, in arcseconds on sky/mm
+radialCoeffs : [0.0, 1.0, 0.0, 1.0]     # radial distortion coefficients (c_0 + c_1 r + c_2 r^2 + ...)
+
+#
+# A single amplifier ("segment" to the camera team)
+#
+AMP : &AMP
+    # trimmed
+    dataExtent : [512, 2002]
+    readCorner : LL
+
+    nRowPreParallelTransfer : 0         # number of rows digitised before first parallel transfer
+    extended : 10                       # number of pixels in the extended register
+    h_overscan : 22                     # number of overscan pixels in x (serial)
+    v_overscan : 46                     # number of overscan pixel in y (parallel)
+
+    saturation : 65535                  # saturation level, DN XXX Should this be in electrons?
+
+    # Linearity correction is still under discussion, so this is a placeholder.
+    linearityType : PROPORTIONAL
+    linearityThreshold : 0
+    linearityMax : 65535                # == saturation
+    linearityCoeffs : [0, 65535]        # == [linearityThreshold, linearityMax]
+#
+# A single CCD ("sensor" to the camera team)
+#
+CCD : &CCD
+    detectorType : 0
+    refpos : [.nan, .nan]
+    offset : [.nan, .nan]
+    # This is the orientation we need to put the serial direction along the x-axis
+    bbox : [[0, 0], [4095, 4003]]
+    pixelSize : [0.010, 0.010]          # in mm
+    transformDict : {nativeSys : 'Pixels', transforms : None}
+    transposeDetector : False
+    pitch : 0.0                         # (degrees)
+    yaw : 0.0                           # rotation in plane of camera (degrees)
+    roll : 0.0                          # (degrees)
+
+    amplifiers : {}
+#
+# Define our specific devices
+#
+# All the CCDs present in this file
+#
+CCDs :
+   S00: &S00                             # Sensor (0, 0)
+      << : *CCD
+      id : 0
+      serial : abcd1234
+      refpos : [2001.5, 2047.5]
+      offset : [-41.5, -40.5]
+
+      amplifiers:
+           # gain and read noise are taken from fit4_20160413-154303.pdf
+           "00": &A00
+             <<: *AMP
+             flipXY : [False, False]
+             ixy : [7, 0]
+             gain : 3.707220
+             readNoise : 7.105902
+           "10": &A10
+             <<: *A00
+             ixy : [6, 0]
+             gain : 3.724264
+             readNoise : 6.860052
+           "20": &A20
+             <<: *A00
+             ixy : [5, 0]
+             gain : 3.758828
+             readNoise : 7.387405
+           "30": &A30
+             <<: *A00
+             ixy : [4, 0]
+             gain : 3.794040
+             readNoise : 7.222204
+           "40": &A40
+             <<: *A00
+             ixy : [3, 0]
+             gain : 3.724264
+             readNoise : 7.250763
+           "50": &A50
+             <<: *A00
+             ixy : [2, 0]
+             gain : 3.776352
+             readNoise : 7.315250
+           "60": &A60
+             <<: *A00
+             ixy : [1, 0]
+             gain : 3.758828
+             readNoise : 7.104838
+           "70": &A70
+             <<: *A00
+             ixy : [0, 0]
+             gain : 3.776352
+             readNoise : 7.272336
+           "01": &A01
+             <<: *AMP
+             flipXY : [True, True]
+             ixy : [0, 1]
+             gain : 3.724264
+             readNoise : 8.485139
+           "11": &A11
+             <<: *A01
+             ixy : [1, 1]
+             gain : 3.657009
+             readNoise : 8.022778
+           "21": &A21
+             <<: *A01
+             ixy : [2, 1]
+             gain : 3.640573
+             readNoise : 8.157399
+           "31": &A31
+             <<: *A01
+             ixy : [3, 1]
+             gain : 3.624284
+             readNoise : 8.021112
+           "41": &A41
+             <<: *A01
+             ixy : [4, 1]
+             gain : 3.640573
+             readNoise : 8.015486
+           "51": &A51
+             <<: *A01
+             ixy : [5, 1]
+             gain : 3.707220
+             readNoise : 7.928829
+           "61": &A61
+             <<: *A01
+             ixy : [6, 1]
+             gain : 3.673594
+             readNoise : 16.031720
+           "71": &A71
+             <<: *A01
+             ixy : [7, 1]
+             gain : 3.640573
+             readNoise : 7.938155
+
+   S01:                                 # Sensor (0, 1)
+      << : *S00
+      id : 1
+      serial : abcd12345
+      offset : [0.0, -40.5]
+
+      amplifiers:
+           # gain and read noise are total fakes
+           "00":
+             <<: *A00
+             gain : 3.00
+             readNoise : 6.66
+           "10":
+             <<: *A10
+             gain : 3.10
+             readNoise : 6.66
+           "20":
+             <<: *A20
+             gain : 3.20
+             readNoise : 6.66
+           "30":
+             <<: *A30
+             gain : 3.30
+             readNoise : 6.66
+           "40":
+             <<: *A40
+             gain : 3.40
+             readNoise : 6.66
+           "50":
+             <<: *A50
+             gain : 3.50
+             readNoise : 6.66
+           "60":
+             <<: *A60
+             gain : 3.60
+             readNoise : 6.66
+           "70":
+             <<: *A70
+             gain : 3.70
+             readNoise : 6.66
+           "01":
+             <<: *A01
+             gain : 3.01
+             readNoise : 6.66
+           "11":
+             <<: *A11
+             gain : 3.11
+             readNoise : 8.66
+           "21":
+             <<: *A21
+             gain : 3.21
+             readNoise : 8.66
+           "31":
+             <<: *A31
+             gain : 3.31
+             readNoise : 6.66
+           "41":
+             <<: *A41
+             gain : 3.41
+             readNoise : 6.66
+           "51":
+             <<: *A51
+             gain : 3.51
+             readNoise : 6.66
+           "61":
+             <<: *A61
+             gain : 3.61
+             readNoise : 6.66
+           "71":
+             <<: *A71
+             gain : 3.71
+             readNoise : 7.66
+             
+   S02:                                 # Sensor (0, 2)
+      << : *S00
+      id : 2
+      serial : abcd12345
+      offset : [41.5, -40.5]
+
+      amplifiers:
+           # gain and read noise are total fakes
+           "00":
+             <<: *A00
+             gain : 3.00
+             readNoise : 6.66
+           "10":
+             <<: *A10
+             gain : 3.10
+             readNoise : 6.66
+           "20":
+             <<: *A20
+             gain : 3.20
+             readNoise : 6.66
+           "30":
+             <<: *A30
+             gain : 3.30
+             readNoise : 6.66
+           "40":
+             <<: *A40
+             gain : 3.40
+             readNoise : 6.66
+           "50":
+             <<: *A50
+             gain : 3.50
+             readNoise : 6.66
+           "60":
+             <<: *A60
+             gain : 3.60
+             readNoise : 6.66
+           "70":
+             <<: *A70
+             gain : 3.70
+             readNoise : 6.66
+           "01":
+             <<: *A01
+             gain : 3.01
+             readNoise : 6.66
+           "11":
+             <<: *A11
+             gain : 3.11
+             readNoise : 8.66
+           "21":
+             <<: *A21
+             gain : 3.21
+             readNoise : 8.66
+           "31":
+             <<: *A31
+             gain : 3.31
+             readNoise : 6.66
+           "41":
+             <<: *A41
+             gain : 3.41
+             readNoise : 6.66
+           "51":
+             <<: *A51
+             gain : 3.51
+             readNoise : 6.66
+           "61":
+             <<: *A61
+             gain : 3.61
+             readNoise : 6.66
+           "71":
+             <<: *A71
+             gain : 3.71
+             readNoise : 7.66
+             
+   S10:                                 # Sensor (1, 0)
+      << : *S00
+      id : 3
+      serial : abcd12345
+      offset : [-41.5, 0.0]
+
+      amplifiers:
+           # gain and read noise are total fakes
+           "00":
+             <<: *A00
+             gain : 3.00
+             readNoise : 6.66
+           "10":
+             <<: *A10
+             gain : 3.10
+             readNoise : 6.66
+           "20":
+             <<: *A20
+             gain : 3.20
+             readNoise : 6.66
+           "30":
+             <<: *A30
+             gain : 3.30
+             readNoise : 6.66
+           "40":
+             <<: *A40
+             gain : 3.40
+             readNoise : 6.66
+           "50":
+             <<: *A50
+             gain : 3.50
+             readNoise : 6.66
+           "60":
+             <<: *A60
+             gain : 3.60
+             readNoise : 6.66
+           "70":
+             <<: *A70
+             gain : 3.70
+             readNoise : 6.66
+           "01":
+             <<: *A01
+             gain : 3.01
+             readNoise : 6.66
+           "11":
+             <<: *A11
+             gain : 3.11
+             readNoise : 8.66
+           "21":
+             <<: *A21
+             gain : 3.21
+             readNoise : 8.66
+           "31":
+             <<: *A31
+             gain : 3.31
+             readNoise : 6.66
+           "41":
+             <<: *A41
+             gain : 3.41
+             readNoise : 6.66
+           "51":
+             <<: *A51
+             gain : 3.51
+             readNoise : 6.66
+           "61":
+             <<: *A61
+             gain : 3.61
+             readNoise : 6.66
+           "71":
+             <<: *A71
+             gain : 3.71
+             readNoise : 7.66
+
+   S11:                                 # Sensor (1, 1)
+      << : *S00
+      id : 4
+      serial : abcd12345
+      offset : [0.0, 0.0]
+
+      amplifiers:
+           # gain and read noise are total fakes
+           "00":
+             <<: *A00
+             gain : 3.00
+             readNoise : 6.66
+           "10":
+             <<: *A10
+             gain : 3.10
+             readNoise : 6.66
+           "20":
+             <<: *A20
+             gain : 3.20
+             readNoise : 6.66
+           "30":
+             <<: *A30
+             gain : 3.30
+             readNoise : 6.66
+           "40":
+             <<: *A40
+             gain : 3.40
+             readNoise : 6.66
+           "50":
+             <<: *A50
+             gain : 3.50
+             readNoise : 6.66
+           "60":
+             <<: *A60
+             gain : 3.60
+             readNoise : 6.66
+           "70":
+             <<: *A70
+             gain : 3.70
+             readNoise : 6.66
+           "01":
+             <<: *A01
+             gain : 3.01
+             readNoise : 6.66
+           "11":
+             <<: *A11
+             gain : 3.11
+             readNoise : 8.66
+           "21":
+             <<: *A21
+             gain : 3.21
+             readNoise : 8.66
+           "31":
+             <<: *A31
+             gain : 3.31
+             readNoise : 6.66
+           "41":
+             <<: *A41
+             gain : 3.41
+             readNoise : 6.66
+           "51":
+             <<: *A51
+             gain : 3.51
+             readNoise : 6.66
+           "61":
+             <<: *A61
+             gain : 3.61
+             readNoise : 6.66
+           "71":
+             <<: *A71
+             gain : 3.71
+             readNoise : 7.66
+             
+   S12:                                 # Sensor (1, 2)
+      << : *S00
+      id : 5
+      serial : abcd12345
+      offset : [41.5, 0.0]
+
+      amplifiers:
+           # gain and read noise are total fakes
+           "00":
+             <<: *A00
+             gain : 3.00
+             readNoise : 6.66
+           "10":
+             <<: *A10
+             gain : 3.10
+             readNoise : 6.66
+           "20":
+             <<: *A20
+             gain : 3.20
+             readNoise : 6.66
+           "30":
+             <<: *A30
+             gain : 3.30
+             readNoise : 6.66
+           "40":
+             <<: *A40
+             gain : 3.40
+             readNoise : 6.66
+           "50":
+             <<: *A50
+             gain : 3.50
+             readNoise : 6.66
+           "60":
+             <<: *A60
+             gain : 3.60
+             readNoise : 6.66
+           "70":
+             <<: *A70
+             gain : 3.70
+             readNoise : 6.66
+           "01":
+             <<: *A01
+             gain : 3.01
+             readNoise : 6.66
+           "11":
+             <<: *A11
+             gain : 3.11
+             readNoise : 8.66
+           "21":
+             <<: *A21
+             gain : 3.21
+             readNoise : 8.66
+           "31":
+             <<: *A31
+             gain : 3.31
+             readNoise : 6.66
+           "41":
+             <<: *A41
+             gain : 3.41
+             readNoise : 6.66
+           "51":
+             <<: *A51
+             gain : 3.51
+             readNoise : 6.66
+           "61":
+             <<: *A61
+             gain : 3.61
+             readNoise : 6.66
+           "71":
+             <<: *A71
+             gain : 3.71
+             readNoise : 7.66
+             
+             
+   S20:                                 # Sensor (2, 0)
+      << : *S00
+      id : 6
+      serial : abcd12345
+      offset : [-41.5, 40.5]
+
+      amplifiers:
+           # gain and read noise are total fakes
+           "00":
+             <<: *A00
+             gain : 3.00
+             readNoise : 6.66
+           "10":
+             <<: *A10
+             gain : 3.10
+             readNoise : 6.66
+           "20":
+             <<: *A20
+             gain : 3.20
+             readNoise : 6.66
+           "30":
+             <<: *A30
+             gain : 3.30
+             readNoise : 6.66
+           "40":
+             <<: *A40
+             gain : 3.40
+             readNoise : 6.66
+           "50":
+             <<: *A50
+             gain : 3.50
+             readNoise : 6.66
+           "60":
+             <<: *A60
+             gain : 3.60
+             readNoise : 6.66
+           "70":
+             <<: *A70
+             gain : 3.70
+             readNoise : 6.66
+           "01":
+             <<: *A01
+             gain : 3.01
+             readNoise : 6.66
+           "11":
+             <<: *A11
+             gain : 3.11
+             readNoise : 8.66
+           "21":
+             <<: *A21
+             gain : 3.21
+             readNoise : 8.66
+           "31":
+             <<: *A31
+             gain : 3.31
+             readNoise : 6.66
+           "41":
+             <<: *A41
+             gain : 3.41
+             readNoise : 6.66
+           "51":
+             <<: *A51
+             gain : 3.51
+             readNoise : 6.66
+           "61":
+             <<: *A61
+             gain : 3.61
+             readNoise : 6.66
+           "71":
+             <<: *A71
+             gain : 3.71
+             readNoise : 7.66
+
+   S21:                                 # Sensor (2, 1)
+      << : *S00
+      id : 7
+      serial : abcd12345
+      offset : [0.0, 40.5]
+
+      amplifiers:
+           # gain and read noise are total fakes
+           "00":
+             <<: *A00
+             gain : 3.00
+             readNoise : 6.66
+           "10":
+             <<: *A10
+             gain : 3.10
+             readNoise : 6.66
+           "20":
+             <<: *A20
+             gain : 3.20
+             readNoise : 6.66
+           "30":
+             <<: *A30
+             gain : 3.30
+             readNoise : 6.66
+           "40":
+             <<: *A40
+             gain : 3.40
+             readNoise : 6.66
+           "50":
+             <<: *A50
+             gain : 3.50
+             readNoise : 6.66
+           "60":
+             <<: *A60
+             gain : 3.60
+             readNoise : 6.66
+           "70":
+             <<: *A70
+             gain : 3.70
+             readNoise : 6.66
+           "01":
+             <<: *A01
+             gain : 3.01
+             readNoise : 6.66
+           "11":
+             <<: *A11
+             gain : 3.11
+             readNoise : 8.66
+           "21":
+             <<: *A21
+             gain : 3.21
+             readNoise : 8.66
+           "31":
+             <<: *A31
+             gain : 3.31
+             readNoise : 6.66
+           "41":
+             <<: *A41
+             gain : 3.41
+             readNoise : 6.66
+           "51":
+             <<: *A51
+             gain : 3.51
+             readNoise : 6.66
+           "61":
+             <<: *A61
+             gain : 3.61
+             readNoise : 6.66
+           "71":
+             <<: *A71
+             gain : 3.71
+             readNoise : 7.66
+             
+   S22:                                 # Sensor (2, 2)
+      << : *S00
+      id : 8
+      serial : abcd12345
+      offset : [41.5, 40.5]
+
+      amplifiers:
+           # gain and read noise are total fakes
+           "00":
+             <<: *A00
+             gain : 3.00
+             readNoise : 6.66
+           "10":
+             <<: *A10
+             gain : 3.10
+             readNoise : 6.66
+           "20":
+             <<: *A20
+             gain : 3.20
+             readNoise : 6.66
+           "30":
+             <<: *A30
+             gain : 3.30
+             readNoise : 6.66
+           "40":
+             <<: *A40
+             gain : 3.40
+             readNoise : 6.66
+           "50":
+             <<: *A50
+             gain : 3.50
+             readNoise : 6.66
+           "60":
+             <<: *A60
+             gain : 3.60
+             readNoise : 6.66
+           "70":
+             <<: *A70
+             gain : 3.70
+             readNoise : 6.66
+           "01":
+             <<: *A01
+             gain : 3.01
+             readNoise : 6.66
+           "11":
+             <<: *A11
+             gain : 3.11
+             readNoise : 8.66
+           "21":
+             <<: *A21
+             gain : 3.21
+             readNoise : 8.66
+           "31":
+             <<: *A31
+             gain : 3.31
+             readNoise : 6.66
+           "41":
+             <<: *A41
+             gain : 3.41
+             readNoise : 6.66
+           "51":
+             <<: *A51
+             gain : 3.51
+             readNoise : 6.66
+           "61":
+             <<: *A61
+             gain : 3.61
+             readNoise : 6.66
+           "71":
+             <<: *A71
+             gain : 3.71
+             readNoise : 7.66
+             
+             
+             

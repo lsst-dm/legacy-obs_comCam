@@ -1,0 +1,6 @@
+.DS_Store
+*.pyc
+.scon*
+config.log
+ups/*.cfgc
+python/lsst/obs/comCam/version.py
