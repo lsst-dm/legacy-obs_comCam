@@ -24,16 +24,40 @@
 import lsst.afw.image.utils as afwImageUtils
 import lsst.afw.geom as afwGeom
 import lsst.afw.image as afwImage
-from lsst.obs.base import CameraMapper
+from lsst.obs.base import CameraMapper, MakeRawVisitInfo
 import lsst.pex.policy as pexPolicy
 
 from lsst.obs.comCam import ComCam
 
 __all__ = ["ComCamMapper"]
 
+class ComCamMakeRawVisitInfo(MakeRawVisitInfo):
+    """functor to make a VisitInfo from the FITS header of a raw image
+    """
+
+    def setArgDict(self, md, argDict):
+        """Fill an argument dict with arguments for makeVisitInfo and pop associated metadata
+        """
+        if True:
+            super(ComCamMakeRawVisitInfo, self).setArgDict(md, argDict)
+        else:
+            argDict["exposureTime"] = self.popFloat(md, "EXPTIME")
+            argDict["date"] = self.getDateAvg(md=md, exposureTime=argDict["exposureTime"])
+
+    def getDateAvg(self, md, exposureTime):
+        """Return date at the middle of the exposure
+
+        @param[in,out] md  metadata, as an lsst.daf.base.PropertyList or PropertySet;
+            items that are used are stripped from the metadata
+            (except TIMESYS, because it may apply to more than one other keyword).
+        @param[in] exposureTime  exposure time (sec)
+        """
+        dateObs = self.popIsoDate(md, "DATE-OBS")
+        return self.offsetDate(dateObs, 0.5*exposureTime)
 
 class ComCamMapper(CameraMapper):
     packageName = 'obs_comCam'
+    MakeRawVisitInfoClass = ComCamMakeRawVisitInfo
 
     def __init__(self, inputPolicy=None, **kwargs):
         policyFile = pexPolicy.DefaultPolicyFile(self.packageName, "comCamMapper.paf", "policy")
@@ -45,7 +69,6 @@ class ComCamMapper(CameraMapper):
         keys = {'visit': int,
                 'ccd': int,
                 'filter': str,
-                'date': str,
                 'expTime': float,
                 'object': str,
                 'imageType': str,
@@ -59,16 +82,18 @@ class ComCamMapper(CameraMapper):
         self.filterIdMap = {}           # where is this used?  Generating objIds??
 
         afwImageUtils.defineFilter('NONE', 0.0, alias=['no_filter', "OPEN"])
+        afwImageUtils.defineFilter('275CutOn', 0.0, alias=[])
+        afwImageUtils.defineFilter('550CutOn', 0.0, alias=[])
 
     def _makeCamera(self, policy, repositoryDir):
         """Make a camera (instance of lsst.afw.cameraGeom.Camera) describing the camera geometry
         """
         return ComCam()
 
-    def ___extractDetectorName(self, dataId):
-        return "0"
+    def _extractDetectorName(self, dataId):
+        return dataId["ccd"]
 
-    def ___computeCcdExposureId(self, dataId):
+    def _computeCcdExposureId(self, dataId):
         """Compute the 64-bit (long) identifier for a CCD exposure.
 
         @param dataId (dict) Data identifier with visit
@@ -76,6 +101,63 @@ class ComCamMapper(CameraMapper):
         visit = dataId['visit']
         return int(visit)
 
+    def bypass_raw(self, datasetType, pythonType, location, dataId):
+        """Read raw image with hacked metadata"""
+        filename = location.getLocations()[0]
+
+        det = [_ for _ in self.camera if _.getName() == dataId['ccd']][0]
+        md = self.bypass_raw_md(datasetType, pythonType, location, dataId)
+
+        from lsst.ip.isr import AssembleCcdTask
+
+        config = AssembleCcdTask.ConfigClass()
+        config.doTrim = False
+        config.setGain = False
+
+        assembleTask = AssembleCcdTask(config=config)
+        
+        ampDict = {}
+        for amp in det:
+            ampImage = afwImage.ImageI(filename, hdu=amp["hdu"] + 1)    # 1-indexed
+            ampExposure = afwImage.makeExposure(afwImage.makeMaskedImage(ampImage))
+            ampExposure.setDetector(det)
+            ampDict[amp.getName()] = ampExposure
+            
+        exposure = assembleTask.assembleCcd(ampDict)
+        exposure.setMetadata(md)
+
+        return exposure
+
+    def bypass_raw_md(self, datasetType, pythonType, location, dataId):
+        """Read metadata for raw image, working around DM-9854
+
+        "Can't read metadata from an empty PDU"
+        """
+
+        try:
+            import astropy.io.fits as fits
+        except ImportError:
+            self.log.warn("Unable to import astropy.io.fits; reading metadata from %s's HDU 1 not PDU" %
+                          filename)
+            fits = None
+            
+        filename = location.getLocations()[0]
+
+        if fits is None:
+            md = afwImage.readMetadata(filename, hdu=0) # still fails to read PDU; also DM-9854
+        else:
+            import lsst.daf.base as dafBase
+            with fits.open(filename) as fd:
+                header = fd[0].header
+
+                md = dafBase.PropertyList()
+                for k, v in header.items():
+                    md.set(k, v)
+
+        return md
+
+    #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+  
     def __validate(self, dataId):
         visit = dataId.get("visit")
         if visit is not None and not isinstance(visit, int):
@@ -101,20 +183,6 @@ class ComCamMapper(CameraMapper):
         in code rather than reconstituted from persisted files, so I return a dummy value.
         """
         return "this_is_a_hack"
-
-    # def __bypass_raw(self, datasetType, pythonType, location, dataId):
-    #     """Read raw image with hacked metadata"""
-    #     filename = location.getLocations()[0]
-    #     md = self.bypass_raw_md(datasetType, pythonType, location, dataId)
-    #     image = afwImage.DecoratedImageU(filename)
-    #     image.setMetadata(md)
-    #     return self.std_raw(image, dataId)
-
-    def __bypass_raw_md(self, datasetType, pythonType, location, dataId):
-        """Read metadata for raw image, adding fake Wcs"""
-        filename = location.getLocations()[0]
-        md = afwImage.readMetadata(filename, 1)  # 1 = PHU
-        return md
 
     # bypass_raw_amp = bypass_raw
     # bypass_raw_amp_md = bypass_raw_md

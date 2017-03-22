@@ -16,19 +16,19 @@ defaultSubLevels: {
 exposures: {
     raw: {
         template:    "raw/%(run)s/%(raft)s/%(ccd)s/%(raft)s-%(ccd)s-%(visit)06d.fits"
-        python:     "lsst.afw.image.DecoratedImageU"
+        python:      "lsst.afw.image.DecoratedImageU"
         persistable: "DecoratedImageU"
         storage:     "FitsStorage"
-        level:        "Ccd"
-        tables:        raw
+        level:       "Ccd"
+        tables:      raw
     }
     raw_amp: {
         template:    "raw/%(run)s/%(raft)s/%(ccd)s/%(raft)s-%(ccd)s-%(visit)06d.fits[%(channel)d]"
-        python:     "lsst.afw.image.DecoratedImageU"
-        persistable:         "DecoratedImageU"
+        python:      "lsst.afw.image.DecoratedImageU"
+        persistable: "DecoratedImageU"
         storage:     "FitsStorage"
-        level:        "Amp"
-        tables:        raw
+        level:       "Amp"
+        tables:      raw
     }
     postISRCCD: {
         template:    "postISRCCD/postISRCCD_v%(visit)d_f%(filter)s.fits"

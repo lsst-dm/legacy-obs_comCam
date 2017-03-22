@@ -116,16 +116,19 @@ class YamlCamera(cameraGeom.Camera):
         linThreshKey = schema.addField('linearityThreshold', type=float)
         linMaxKey = schema.addField('linearityMaximum', type=float)
         linUnitsKey = schema.addField('linearityUnits', type=str, size=9)
+        hduKey = schema.addField('hdu', type=np.int32)
         # end placeholder
         self.ampInfoDict = {}
         ampCatalog = AmpInfoCatalog(schema)
-        for name, amp in ccd['amplifiers'].items():
+        #import pdb; pdb.set_trace() 
+        for name, amp in sorted(ccd['amplifiers'].items(), key=lambda x : x[1]['hdu']):
             record = ampCatalog.addNew()
             record.setName(name)
+            record.set(hduKey, amp['hdu'])
 
             ix, iy = amp['ixy']
             record.setBBox(afwGeom.BoxI(
-                    afwGeom.PointI(ix*xDataExtent, iy*yDataExtent), afwGeom.ExtentI(xDataExtent, yDataExtent),
+                afwGeom.PointI(ix*xDataExtent, iy*yDataExtent), afwGeom.ExtentI(xDataExtent, yDataExtent),
                 ))
 
             record.setRawBBox(afwGeom.Box2I(
