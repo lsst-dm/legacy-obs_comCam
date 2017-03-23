@@ -103,7 +103,7 @@ class ComCamMapper(CameraMapper):
 
     def bypass_raw(self, datasetType, pythonType, location, dataId):
         """Read raw image with hacked metadata"""
-        filename = location.getLocations()[0]
+        filename = location.getLocationsWithRoot()[0]
 
         det = [_ for _ in self.camera if _.getName() == dataId['ccd']][0]
         md = self.bypass_raw_md(datasetType, pythonType, location, dataId)
@@ -115,14 +115,14 @@ class ComCamMapper(CameraMapper):
         config.setGain = False
 
         assembleTask = AssembleCcdTask(config=config)
-        
+
         ampDict = {}
         for amp in det:
             ampImage = afwImage.ImageI(filename, hdu=amp["hdu"] + 1)    # 1-indexed
             ampExposure = afwImage.makeExposure(afwImage.makeMaskedImage(ampImage))
             ampExposure.setDetector(det)
             ampDict[amp.getName()] = ampExposure
-            
+
         exposure = assembleTask.assembleCcd(ampDict)
         exposure.setMetadata(md)
 
@@ -134,17 +134,17 @@ class ComCamMapper(CameraMapper):
         "Can't read metadata from an empty PDU"
         """
 
+        filename = location.getLocationsWithRoot()[0]
+
         try:
             import astropy.io.fits as fits
         except ImportError:
             self.log.warn("Unable to import astropy.io.fits; reading metadata from %s's HDU 1 not PDU" %
                           filename)
             fits = None
-            
-        filename = location.getLocations()[0]
 
         if fits is None:
-            md = afwImage.readMetadata(filename, hdu=0) # still fails to read PDU; also DM-9854
+            md = afwImage.readMetadata(filename, hdu=0)  # still fails to read PDU; also DM-9854
         else:
             import lsst.daf.base as dafBase
             with fits.open(filename) as fd:
@@ -157,7 +157,7 @@ class ComCamMapper(CameraMapper):
         return md
 
     #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-  
+
     def __validate(self, dataId):
         visit = dataId.get("visit")
         if visit is not None and not isinstance(visit, int):
