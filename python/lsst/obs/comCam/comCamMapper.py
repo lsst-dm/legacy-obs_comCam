@@ -31,6 +31,41 @@ from lsst.obs.comCam import ComCam
 
 __all__ = ["ComCamMapper"]
 
+def assemble_raw(dataId, componentInfo, cls):
+    """Called by the butler to construct the composite type "raw"
+
+    Note that we still need to define "_raw" and copy various fields over.  Sigh.
+    """
+    from lsst.ip.isr import AssembleCcdTask
+
+    config = AssembleCcdTask.ConfigClass()
+    config.doTrim = False
+    config.setGain = False
+
+    assembleTask = AssembleCcdTask(config=config)
+
+    ampExps = componentInfo['raw_amp'].obj
+    if len(ampExps) == 0:
+        raise RuntimeError("Unable to read raw_amps for %s" % dataId)
+
+    ccd = ampExps[0].getDetector()      # the same (full, CCD-level) Detector is attached to all ampExps
+
+    ampDict = {}
+    for amp, ampExp in zip(ccd, ampExps):
+        ampDict[amp.getName()] = ampExp
+
+    exposure = assembleTask.assembleCcd(ampDict)
+
+    if False:
+        md = self.bypass_raw_md(datasetType, pythonType, location, dataId)
+        exposure.setMetadata(md)
+    #
+    # We need to standardize, but have no way to call std_raw.  The butler should do this for us.
+    #
+    #exposure = self.std_raw(exposure, dataId)
+
+    return exposure
+
 class ComCamMakeRawVisitInfo(MakeRawVisitInfo):
     """functor to make a VisitInfo from the FITS header of a raw image
     """
@@ -38,11 +73,7 @@ class ComCamMakeRawVisitInfo(MakeRawVisitInfo):
     def setArgDict(self, md, argDict):
         """Fill an argument dict with arguments for makeVisitInfo and pop associated metadata
         """
-        if True:
-            super(ComCamMakeRawVisitInfo, self).setArgDict(md, argDict)
-        else:
-            argDict["exposureTime"] = self.popFloat(md, "EXPTIME")
-            argDict["date"] = self.getDateAvg(md=md, exposureTime=argDict["exposureTime"])
+        super(ComCamMakeRawVisitInfo, self).setArgDict(md, argDict)
 
     def getDateAvg(self, md, exposureTime):
         """Return date at the middle of the exposure
@@ -64,20 +95,11 @@ class ComCamMapper(CameraMapper):
         policy = pexPolicy.Policy(policyFile)
 
         CameraMapper.__init__(self, policy, policyFile.getRepositoryPath(), **kwargs)
-
-        # Ensure each dataset type of interest knows about the full range of keys available from the registry
-        keys = {'visit': int,
-                'ccd': int,
-                'filter': str,
-                'expTime': float,
-                'object': str,
-                'imageType': str,
-                }
-        for name in ("raw", "raw_amp",
-                     # processCcd outputs
-                     "postISRCCD", "calexp", "postISRCCD", "src", "icSrc", "srcMatch",
-                     ):
-            self.mappings[name].keyDict.update(keys)
+        #
+        # The composite objects don't seem to set these
+        #
+        for d in (self.mappings, self.exposures):
+            d['raw'] = d['_raw']
 
         self.filterIdMap = {}           # where is this used?  Generating objIds??
 
@@ -101,32 +123,43 @@ class ComCamMapper(CameraMapper):
         visit = dataId['visit']
         return int(visit)
 
-    def bypass_raw(self, datasetType, pythonType, location, dataId):
-        """Read raw image with hacked metadata"""
-        filename = location.getLocations()[0]
+    def query_raw_amp(self, format, dataId):
+        """!Return a list of tuples of values of the fields specified in format, in order
 
-        det = [_ for _ in self.camera if _.getName() == dataId['ccd']][0]
-        md = self.bypass_raw_md(datasetType, pythonType, location, dataId)
+        @param format  The desired set of keys
+        @param dataId  A possible-incomplete dataId
+        """
+        nChannel = 16                   # number of possible channels, 1..nChannel
 
-        from lsst.ip.isr import AssembleCcdTask
+        if "channel" in dataId:         # they specified a channel
+            dataId = dataId.copy()
+            channels = [dataId.pop('channel')]
+        else:
+            channels = range(1, nChannel+1) # we want all possible channels
 
-        config = AssembleCcdTask.ConfigClass()
-        config.doTrim = False
-        config.setGain = False
+        if "channel" in format:           # they asked for a channel, but we mustn't query for it
+            format = list(format)
+            channelIndex = format.index('channel') # where channel values should go
+            format.pop(channelIndex)
+        else:
+            channelIndex = None
 
-        assembleTask = AssembleCcdTask(config=config)
-        
-        ampDict = {}
-        for amp in det:
-            ampImage = afwImage.ImageI(filename, hdu=amp["hdu"] + 1)    # 1-indexed
-            ampExposure = afwImage.makeExposure(afwImage.makeMaskedImage(ampImage))
-            ampExposure.setDetector(det)
-            ampDict[amp.getName()] = ampExposure
-            
-        exposure = assembleTask.assembleCcd(ampDict)
-        exposure.setMetadata(md)
+        dids = []                       # returned list of dataIds
+        for value in self.query_raw(format, dataId):
+            if channelIndex is None:
+                dids.append(value)
+            else:
+                for c in channels:
+                    did = list(value)
+                    did.insert(channelIndex, c)
+                    dids.append(tuple(did))
 
-        return exposure
+        return dids
+
+    def query_raw(self, *args, **kwargs):
+        """The composite type "raw" doesn't provide query_raw, so we defined type _raw in the .paf file
+        """
+        return self.query__raw(*args, **kwargs)
 
     def bypass_raw_md(self, datasetType, pythonType, location, dataId):
         """Read metadata for raw image, working around DM-9854
@@ -157,7 +190,9 @@ class ComCamMapper(CameraMapper):
         return md
 
     #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-  
+    #
+    # All of these have an extra _ prepended and are thus not currently live
+    #
     def __validate(self, dataId):
         visit = dataId.get("visit")
         if visit is not None and not isinstance(visit, int):
@@ -175,7 +210,7 @@ class ComCamMapper(CameraMapper):
                     # These may be hot pixels, but we'll treat them as bad until we can get more data
                     (3801, 666, 3805, 669),
                     (3934, 582, 3936, 589),
-        )]
+                )]
 
     def ___defectLookup(self, dataId):
         """ This function needs to return a non-None value otherwise the mapper gives up
@@ -183,9 +218,6 @@ class ComCamMapper(CameraMapper):
         in code rather than reconstituted from persisted files, so I return a dummy value.
         """
         return "this_is_a_hack"
-
-    # bypass_raw_amp = bypass_raw
-    # bypass_raw_amp_md = bypass_raw_md
 
     def __standardizeCalib(self, dataset, item, dataId):
         """Standardize a calibration image read in by the butler
@@ -204,7 +236,7 @@ class ComCamMapper(CameraMapper):
         elif "Image" in mapping.python:
             if hasattr(item, "getImage"):  # For DecoratedImageX
                 item = item.getImage()
-            exp = afwImage.makeExposure(afwImage.makeMaskedImage(item))
+                exp = afwImage.makeExposure(afwImage.makeMaskedImage(item))
         elif "Exposure" in mapping.python:
             exp = item
         else:

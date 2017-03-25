@@ -96,7 +96,7 @@ CCDs :
    S00: &S00                             # Sensor (0, 0)
       << : *CCD
       id : 0
-      serial : abcd1234
+      serial : ITL-3800C-145-Dev
       refpos : [2001.5, 2047.5]
       offset : [-41.5, -40.5]
 
@@ -106,217 +106,680 @@ CCDs :
              hdu : 1
              flipXY : [True, False]
              ixy : [0, 0]
-             gain : 2.15444834177
+             gain : 1.093
              readNoise : 6.66
            "11": &A11
              <<: *A10
              hdu : 2
              ixy : [1, 0]
-             gain : 2.08054225101
+             gain : 1.047
              readNoise : 6.66
            "12": &A12
              <<: *A10
              hdu : 3
              ixy : [2, 0]
-             gain : 2.05561672241
+             gain : 1.048
              readNoise : 6.66
            "13": &A13
              <<: *A10
              hdu : 4
              ixy : [3, 0]
-             gain : 6.49999975786
+             gain : 2.826
              readNoise : 6.66
            "14": &A14
              <<: *A10
              hdu : 5
              ixy : [4, 0]
-             gain : 2.07416583495
+             gain : 1.059
              readNoise : 6.66
            "15": &A15
              <<: *A10
              hdu : 6
              ixy : [5, 0]
-             gain : 2.02922287643
+             gain : 1.014
              readNoise : 6.66
            "16": &A16
              <<: *A10
              hdu : 7
              ixy : [6, 0]
-             gain : 2.09529818493
+             gain : 1.071
              readNoise : 6.66
            "17": &A17
              <<: *A10
              hdu : 8
              ixy : [7, 0]
-             gain : 2.03057429159
+             gain : 1.000
              readNoise : 6.66
            "07": &A07
              <<: *AMP
              hdu : 9
              flipXY : [True, True]
              ixy : [7, 1]
-             gain : 2.15740397831
+             gain : 1.111
              readNoise : 6.66
            "06": &A06
              <<: *A07
              hdu : 10
              ixy : [6, 1]
-             gain : 2.20223956887
+             gain : 1.127
              readNoise : 6.66
            "05": &A05
              <<: *A07
              hdu : 11
              ixy : [5, 1]
-             gain : 2.01475796916
+             gain : 1.019
              readNoise : 6.66
            "04": &A04
              <<: *A07
              hdu : 12
              ixy : [4, 1]
-             gain : 2.17278501685
+             gain : 1.110
              readNoise : 6.66
            "03": &A03
              <<: *A07
              hdu : 13
              ixy : [3, 1]
-             gain : 2.12171670559
+             gain : 1.090
              readNoise : 6.66
            "02": &A02
              <<: *A07
              hdu : 14
              ixy : [2, 1]
-             gain : 2.16117491585
+             gain : 1.106
              readNoise : 6.66
            "01": &A01
              <<: *A07
              hdu : 15
              ixy : [1, 1]
-             gain : 2.12443478821
+             gain : 1.097
              readNoise : 6.66
            "00": &A00
              <<: *A07
              hdu : 16
              ixy : [0, 1]
-             gain : 2.06645506827
+             gain : 1.048
              readNoise : 6.66
 
    S01:                                 # Sensor (0, 1)
       << : *S00
       id : 1
-      serial : abcd12345
+      serial : ITL-3800C-022-Dev
       offset : [0.0, -40.5]
 
       amplifiers:
-           # gain and read noise are total fakes
+           # read noise is a total fake
            "10":
              <<: *A10
-             gain : 1.96092460665
+             gain : 1.021
              readNoise : 6.66
            "11":
              <<: *A11
-             gain : 1.74863322367
+             gain : 0.832
              readNoise : 6.66
            "12":
              <<: *A12
-             gain : 1.7231714533
+             gain : 0.816
              readNoise : 6.66
            "13":
              <<: *A13
-             gain : 1.84809121524
+             gain : 0.891
              readNoise : 6.66
            "14":
              <<: *A14
-             gain : 1.22757554135
+             gain : 0.545
              readNoise : 6.66
            "15":
              <<: *A15
-             gain : 1.49257405704
+             gain : 0.677
              readNoise : 6.66
            "16":
              <<: *A16
-             gain : 1.87508603021
+             gain : 0.923
              readNoise : 6.66
            "17":
              <<: *A17
-             gain : 1.75820077919
+             gain : 0.858
              readNoise : 6.66
            "07":
              <<: *A07
-             gain : 1.36138832069
+             gain : 0.681
              readNoise : 6.66
            "06":
              <<: *A06
-             gain : 1.16242314124
+             gain : 0.582
              readNoise : 8.66
            "05":
              <<: *A05
-             gain : 1.40361942918
+             gain : 0.710
              readNoise : 8.66
            "04":
              <<: *A04
-             gain : 1.42782775531
+             gain : 0.721
              readNoise : 6.66
            "03":
              <<: *A03
-             gain : 1.48193881068
+             gain : 0.747
              readNoise : 6.66
            "02":
              <<: *A02
-             gain : 1.50455162033
+             gain : 0.762
              readNoise : 6.66
            "01":
              <<: *A01
-             gain : 1.40473754763
+             gain : 0.712
              readNoise : 6.66
            "00":
              <<: *A00
-             gain : 1.47583218464
+             gain : 0.750
              readNoise : 7.66
              
    S02:                                 # Sensor (0, 2)
       << : *S00
       id : 2
-      serial : abcd12345
+      serial : ITL-3800C-041-Dev
       offset : [41.5, -40.5]
 
+      amplifiers:
+           # read noise is a total fake
+           "10":
+             <<: *A10
+             gain : 1.079
+             readNoise : 6.66
+           "11":
+             <<: *A11
+             gain : 1.063
+             readNoise : 6.66
+           "12":
+             <<: *A12
+             gain : 0.969
+             readNoise : 6.66
+           "13":
+             <<: *A13
+             gain : 3.021
+             readNoise : 6.66
+           "14":
+             <<: *A14
+             gain :  1.032
+             readNoise : 6.66
+           "15":
+             <<: *A15
+             gain : 1.032
+             readNoise : 6.66
+           "16":
+             <<: *A16
+             gain: 0.997
+             readNoise : 6.66
+           "17":
+             <<: *A17
+             gain : 0.997
+             readNoise : 6.66
+           "07":
+             <<: *A07
+             gain : 5.024
+             readNoise : 6.66
+           "06":
+             <<: *A06
+             gain : 1.014
+             readNoise : 8.66
+           "05":
+             <<: *A05
+             gain : 1.068
+             readNoise : 8.66
+           "04":
+             <<: *A04
+             gain: 1.079
+             readNoise : 6.66
+           "03":
+             <<: *A03
+             gain : 1.057
+             readNoise : 6.66
+           "02":
+             <<: *A02
+             gain: 1.064
+             readNoise : 6.66
+           "01":
+             <<: *A01
+             gain : 1.079
+             readNoise : 6.66
+           "00":
+             <<: *A00
+             gain : 1.072
+             readNoise : 7.66
              
    S10:                                 # Sensor (1, 0)
       << : *S00
       id : 3
-      serial : abcd12345
+      serial : ITL-3800C-100-Dev
       offset : [-41.5, 0.0]
 
+      amplifiers:
+           # read noise is a total fake
+           "10":
+             <<: *A10
+             gain : 5.673
+             readNoise : 6.66
+           "11":
+             <<: *A11
+             gain : 0.204
+             readNoise : 6.66
+           "12":
+             <<: *A12
+             gain : 0.678
+             readNoise : 6.66
+           "13":
+             <<: *A13
+             gain : 6.011
+             readNoise : 6.66
+           "14":
+             <<: *A14
+             gain : 0.366
+             readNoise : 6.66
+           "15":
+             <<: *A15
+             gain : 0.517
+             readNoise : 6.66
+           "16":
+             <<: *A16
+             gain : 0.804
+             readNoise : 6.66
+           "17":
+             <<: *A17
+             gain : 1.629
+             readNoise : 6.66
+           "07":
+             <<: *A07
+             gain : 1.231
+             readNoise : 6.66
+           "06":
+             <<: *A06
+             gain : 1.257
+             readNoise : 8.66
+           "05":
+             <<: *A05
+             gain : 1.224
+             readNoise : 8.66
+           "04":
+             <<: *A04
+             gain : 1.168
+             readNoise : 6.66
+           "03":
+             <<: *A03
+             gain : 1.149
+             readNoise : 6.66
+           "02":
+             <<: *A02
+             gain : 1.194
+             readNoise : 6.66
+           "01":
+             <<: *A01
+             gain : 1.273
+             readNoise : 6.66
+           "00":
+             <<: *A00
+             gain : 1.275
+             readNoise : 7.66
 
    S11:                                 # Sensor (1, 1)
       << : *S00
       id : 4
-      serial : abcd12345
+      serial : ITL-3800C-017-Dev
       offset : [0.0, 0.0]
+
+      amplifiers:
+           # read noise is a total fake
+           "10":
+             <<: *A10
+             gain : 0.793
+             readNoise : 6.66
+           "11":
+             <<: *A11
+             gain : 0.920
+             readNoise : 6.66
+           "12":
+             <<: *A12
+             gain : 0.863
+             readNoise : 6.66
+           "13":
+             <<: *A13
+             gain : 5.894
+             readNoise : 6.66
+           "14":
+             <<: *A14
+             gain : 0.764
+             readNoise : 6.66
+           "15":
+             <<: *A15
+             gain : 0.807
+             readNoise : 6.66
+           "16":
+             <<: *A16
+             gain : 0.866
+             readNoise : 6.66
+           "17":
+             <<: *A17
+             gain : 0.838
+             readNoise : 6.66
+           "07":
+             <<: *A07
+             gain : 0.010
+             readNoise : 6.66
+           "06":
+             <<: *A06
+             gain : 0.033
+             readNoise : 8.66
+           "05":
+             <<: *A05
+             gain : 0.036
+             readNoise : 8.66
+           "04":
+             <<: *A04
+             gain : 0.026
+             readNoise : 6.66
+           "03":
+             <<: *A03
+             gain : 0.031
+             readNoise : 6.66
+           "02":
+             <<: *A02
+             gain : 0.062
+             readNoise : 6.66
+           "01":
+             <<: *A01
+             gain : 0.091
+             readNoise : 6.66
+           "00":
+             <<: *A00
+             gain : 0.118
+             readNoise : 7.66
              
    S12:                                 # Sensor (1, 2)
       << : *S00
       id : 5
-      serial : abcd12345
+      serial : ITL-3800C-018-Dev
       offset : [41.5, 0.0]
 
-             
-             
+      amplifiers:
+           # read noise is a total fake
+           "10":
+             <<: *A10
+             gain : 1.027
+             readNoise : 6.66
+           "11":
+             <<: *A11
+             gain : 1.005
+             readNoise : 6.66
+           "12":
+             <<: *A12
+             gain : 1.041
+             readNoise : 6.66
+           "13":
+             <<: *A13
+             gain : 1.050
+             readNoise : 6.66
+           "14":
+             <<: *A14
+             gain : 1.023
+             readNoise : 6.66
+           "15":
+             <<: *A15
+             gain : 1.012
+             readNoise : 6.66
+           "16":
+             <<: *A16
+             gain : 1.001
+             readNoise : 6.66
+           "17":
+             <<: *A17
+             gain : 0.620
+             readNoise : 6.66
+           "07":
+             <<: *A07
+             gain : 0.822
+             readNoise : 6.66
+           "06":
+             <<: *A06
+             gain : 1.085
+             readNoise : 8.66
+           "05":
+             <<: *A05
+             gain : 1.105
+             readNoise : 8.66
+           "04":
+             <<: *A04
+             gain : 1.063
+             readNoise : 6.66
+           "03":
+             <<: *A03
+             gain : 1.048
+             readNoise : 6.66
+           "02":
+             <<: *A02
+             gain : 1.062
+             readNoise : 6.66
+           "01":
+             <<: *A01
+             gain : 1.022
+             readNoise : 6.66
+           "00":
+             <<: *A00
+             gain : 1.082
+             readNoise : 7.66
+
    S20:                                 # Sensor (2, 0)
       << : *S00
       id : 6
-      serial : abcd12345
+      serial : ITL-3800C-102-Dev
       offset : [-41.5, 40.5]
 
+      amplifiers:
+           # read noise is a total fake
+           "10":
+             <<: *A10
+             gain : 0.000
+             readNoise : 6.66
+           "11":
+             <<: *A11
+             gain : 0.966
+             readNoise : 6.66
+           "12":
+             <<: *A12
+             gain : 0.893
+             readNoise : 6.66
+           "13":
+             <<: *A13
+             gain : 2.221
+             readNoise : 6.66
+           "14":
+             <<: *A14
+             gain : 0.797
+             readNoise : 6.66
+           "15":
+             <<: *A15
+             gain : 0.849
+             readNoise : 6.66
+           "16":
+             <<: *A16
+             gain : 0.913
+             readNoise : 6.66
+           "17":
+             <<: *A17
+             gain : 8.473
+             readNoise : 6.66
+           "07":
+             <<: *A07
+             gain : 0.831
+             readNoise : 6.66
+           "06":
+             <<: *A06
+             gain : 0.908
+             readNoise : 8.66
+           "05":
+             <<: *A05
+             gain : 0.998
+             readNoise : 8.66
+           "04":
+             <<: *A04
+             gain : 1.023
+             readNoise : 6.66
+           "03":
+             <<: *A03
+             gain : 1.042
+             readNoise : 6.66
+           "02":
+             <<: *A02
+             gain : 1.015
+             readNoise : 6.66
+           "01":
+             <<: *A01
+             gain : 0.944
+             readNoise : 6.66
+           "00":
+             <<: *A00
+             gain : 0.910
+             readNoise : 7.66
 
    S21:                                 # Sensor (2, 1)
       << : *S00
       id : 7
-      serial : abcd12345
+      serial : ITL-3800C-146-Dev
       offset : [0.0, 40.5]
 
+      amplifiers:
+           # read noise is a total fake
+           "10":
+             <<: *A10
+             gain : 0.000
+             readNoise : 6.66
+           "11":
+             <<: *A11
+             gain : 0.933
+             readNoise : 6.66
+           "12":
+             <<: *A12
+             gain : 0.940
+             readNoise : 6.66
+           "13":
+             <<: *A13
+             gain : 0.783
+             readNoise : 6.66
+           "14":
+             <<: *A14
+             gain : 0.939
+             readNoise : 6.66
+           "15":
+             <<: *A15
+             gain : 0.628
+             readNoise : 6.66
+           "16":
+             <<: *A16
+             gain : 0.914
+             readNoise : 6.66
+           "17":
+             <<: *A17
+             gain : 0.125
+             readNoise : 6.66
+           "07":
+             <<: *A07
+             gain : 0.904
+             readNoise : 6.66
+           "06":
+             <<: *A06
+             gain : 0.942
+             readNoise : 8.66
+           "05":
+             <<: *A05
+             gain : 0.954
+             readNoise : 8.66
+           "04":
+             <<: *A04
+             gain : 0.961
+             readNoise : 6.66
+           "03":
+             <<: *A03
+             gain : 0.953
+             readNoise : 6.66
+           "02":
+             <<: *A02
+             gain : 0.961
+             readNoise : 6.66
+           "01":
+             <<: *A01
+             gain : 1.009
+             readNoise : 6.66
+           "00":
+             <<: *A00
+             gain : 0.993
+             readNoise : 7.66
              
    S22:                                 # Sensor (2, 2)
       << : *S00
       id : 8
-      serial : abcd12345
+      serial : ITL-3800C-103-Dev
       offset : [41.5, 40.5]
+
+      amplifiers:
+           # read noise is a total fake
+           "10":
+             <<: *A10
+             gain : 3.491
+             readNoise : 6.66
+           "11":
+             <<: *A11
+             gain : 1.812
+             readNoise : 6.66
+           "12":
+             <<: *A12
+             gain : 0.076
+             readNoise : 6.66
+           "13":
+             <<: *A13
+             gain : 1.970
+             readNoise : 6.66
+           "14":
+             <<: *A14
+             gain : 0.031
+             readNoise : 6.66
+           "15":
+             <<: *A15
+             gain : 3.621
+             readNoise : 6.66
+           "16":
+             <<: *A16
+             gain : 0.000
+             readNoise : 6.66
+           "17":
+             <<: *A17
+             gain : 0.000
+             readNoise : 6.66
+           "07":
+             <<: *A07
+             gain : 0.680
+             readNoise : 6.66
+           "06":
+             <<: *A06
+             gain : 0.518
+             readNoise : 8.66
+           "05":
+             <<: *A05
+             gain : 0.627
+             readNoise : 8.66
+           "04":
+             <<: *A04
+             gain : 0.637
+             readNoise : 6.66
+           "03":
+             <<: *A03
+             gain : 0.639
+             readNoise : 6.66
+           "02":
+             <<: *A02
+             gain : 0.612
+             readNoise : 6.66
+           "01":
+             <<: *A01
+             gain : 0.523
+             readNoise : 6.66
+           "00":
+             <<: *A00
+             gain : 0.438
+             readNoise : 7.66

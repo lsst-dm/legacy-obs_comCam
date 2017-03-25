@@ -120,7 +120,6 @@ class YamlCamera(cameraGeom.Camera):
         # end placeholder
         self.ampInfoDict = {}
         ampCatalog = AmpInfoCatalog(schema)
-        #import pdb; pdb.set_trace() 
         for name, amp in sorted(ccd['amplifiers'].items(), key=lambda x : x[1]['hdu']):
             record = ampCatalog.addNew()
             record.setName(name)
@@ -154,7 +153,7 @@ class YamlCamera(cameraGeom.Camera):
             record.setReadNoise(amp['readNoise'])
             record.setSaturation(amp['saturation'])
             record.setHasRawInfo(True)
-            # flip data when assembling if in top of chip
+            # flip data when assembling if needs be (e.g. data from the serial at the top of a CCD)
             flipX, flipY = amp.get("flipXY")
 
             record.setRawFlipX(flipX)
