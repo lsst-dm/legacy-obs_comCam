@@ -32,7 +32,7 @@ radialCoeffs : [0.0, 1.0, 0.0, 1.0]     # radial distortion coefficients (c_0 + 
 #
 # A single amplifier ("segment" to the camera team)
 #
-AMP_E2V : &AMP_E2V
+AMP_E2V : &AMP_E2V                      # N.b. the assembly of E2V amps into a CCD has not been checked
     # trimmed
     dataExtent : [512, 2002]
     readCorner : LL

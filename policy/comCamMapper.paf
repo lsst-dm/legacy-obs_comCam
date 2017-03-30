@@ -13,17 +13,21 @@ defaultLevel: "visit"
 exposures: {
     _raw: {
         template:    "raw/%(run)s/%(raft)s/%(ccd)s/%(raft)s-%(ccd)s-%(visit)06d.fits"
-        python:      "lsst.afw.image.DecoratedImageI"
-        persistable: "DecoratedImageI"
+        python:      "lsst.daf.base.PropertyList"
+        persistable: "PropertyList"
         storage:     "FitsStorage"
         level:       "Ccd"
         tables:      raw
     }
     raw: {
         inputOnly: True
-
-        template:    "raw/%(run)s/%(raft)s/%(ccd)s/%(raft)s-%(ccd)s-%(visit)06d.fits"
+        # template is ignored
+        #template:    "raw/%(run)s/%(raft)s/%(ccd)s/%(raft)s-%(ccd)s-%(visit)06d.fits"
         composite: {
+            raw_hdu: {
+                #subset: True
+                datasetType: raw_hdu
+            }
             raw_amp: {
                 subset: True
                 datasetType: raw_amp
@@ -156,6 +160,14 @@ calibrations: {
 }
 
 datasets: {
+    raw_hdu: {
+        template:    "raw/%(run)s/%(raft)s/%(ccd)s/%(raft)s-%(ccd)s-%(visit)06d.fits"
+        python:      "lsst.daf.base.propertyList"
+        persistable: "PropertyList"
+        storage:     "FitsStorage"
+        level:       "Ccd"
+        tables:      raw
+    }
     ampExposureId: {
         template:     "ignored"
         # Provide something to import, although we actually return a tuple
