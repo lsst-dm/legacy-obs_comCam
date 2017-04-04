@@ -33,14 +33,18 @@ radialCoeffs : [0.0, 1.0, 0.0, 1.0]     # radial distortion coefficients (c_0 + 
 # A single amplifier ("segment" to the camera team)
 #
 AMP_E2V : &AMP_E2V                      # N.b. the assembly of E2V amps into a CCD has not been checked
+                                        # It also needs to be converted to BBox form (see AMP_ITL)
     # trimmed
     dataExtent : [512, 2002]
     readCorner : LL
 
     nRowPreParallelTransfer : 0         # number of rows digitised before first parallel transfer
     extended : 10                       # number of pixels in the extended register
+    extended0 : 0                       # first pixel in the extended register
     h_overscan : 22                     # number of overscan pixels in x (serial)
+    h_overscan0 : 0                     # first overscan pixel in x (serial)
     v_overscan : 46                     # number of overscan pixel in y (parallel)
+    v_overscan0 : 0                     # first overscan pixel in y (parallel)
 
     saturation : 65535                  # saturation level, DN XXX Should this be in electrons?
 
@@ -52,13 +56,15 @@ AMP_E2V : &AMP_E2V                      # N.b. the assembly of E2V amps into a C
 
 AMP_ITL : &AMP_ITL
     # trimmed
-    dataExtent : [509, 2000]
     readCorner : LL
 
-    nRowPreParallelTransfer : 0         # number of rows digitised before first parallel transfer
-    extended : 3                        # number of pixels in the extended register
-    h_overscan : 32                     # number of overscan pixels in x (serial)
-    v_overscan : 48                     # number of overscan pixel in y (parallel)
+    rawBBox                 : [[0,    0], [544,    2048]]  # total size of one amp's raw data
+
+    rawDataBBox             : [[3,    0], [509,    2000]]  # data region in raw data
+    rawSerialPrescanBBox    : [[0,    0], [3,      2000]]  # serial prescan (often == extended)
+    rawSerialOverscanBBox   : [[512,  0], [32,     2000]]  # serial overscan
+    rawParallelPrescanBBox  : [[0,    1], [0,         0]]  # pixels digitised before first parallel transfer
+    rawParallelOverscanBBox : [[0, 2000], [509,      48]]  # parallel overscan
 
     saturation : 65535                  # saturation level, DN XXX Should this be in electrons?
 
@@ -70,6 +76,7 @@ AMP_ITL : &AMP_ITL
 
 AMP : &AMP
   << : *AMP_ITL
+  perAmpData : True                     # data is provided independentally for each amplifier (a la LSST)
 #
 # A single CCD ("sensor" to the camera team)
 #

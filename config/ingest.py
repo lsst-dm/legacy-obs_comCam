@@ -13,9 +13,7 @@ config.parse.translation = {
     'run': 'RUNNUM',
 }
 config.parse.translators = {
-    #'ccd': 'translate_ccd',
     'visit': 'translate_visit',
-    # 'date': 'translate_date',
 }
 config.parse.defaults = {
     'object': "UNKNOWN",

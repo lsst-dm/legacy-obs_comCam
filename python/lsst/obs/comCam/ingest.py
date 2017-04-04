@@ -20,6 +20,7 @@ class ComCamParseTask(ParseTask):
     def getInfo(self, filename):
         # Grab the basename
         phuInfo, infoList = ParseTask.getInfo(self, filename)
+
         pathname, basename = os.path.split(filename)
         basename = re.sub(r"\.(%s)$" % "|".join(EXTENSIONS), "", basename)
         phuInfo['basename'] = basename

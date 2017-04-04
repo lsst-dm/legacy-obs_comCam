@@ -58,7 +58,6 @@ def assemble_raw(dataId, componentInfo, cls):
 
     config = AssembleCcdTask.ConfigClass()
     config.doTrim = False
-    config.setGain = False              # otherwise it'll try to use the (empty) variance plane
 
     assembleTask = AssembleCcdTask(config=config)
 

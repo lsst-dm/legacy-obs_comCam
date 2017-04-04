@@ -92,21 +92,22 @@ class YamlCamera(cameraGeom.Camera):
         
         return detectorConfigs
 
+    @staticmethod
+    def _makeBBoxFromList(ylist):
+        """Given a list [(x0, y0), (xsize, ysize)], probably from a yaml file, return a BoxI
+            """
+        (x0, y0), (xsize, ysize) = ylist
+        return  afwGeom.BoxI(afwGeom.PointI(x0, y0), afwGeom.ExtentI(xsize, ysize))
+
     def _makeAmpInfoCatalog(self, ccd):
         """Construct an amplifier info catalog
         """
         # Much of this will need to be filled in when we know it.
         assert len(ccd['amplifiers']) > 0
         amp = ccd['amplifiers'].values()[0]
-        xDataExtent, yDataExtent = amp['dataExtent']  # trimmed
 
-        extended = amp['extended']
-        h_overscan = amp['h_overscan']
-        v_overscan = amp['v_overscan']
-        nRowPreParallelTransfer = amp['nRowPreParallelTransfer']
-
-        xRawExtent = extended                + xDataExtent + h_overscan
-        yRawExtent = nRowPreParallelTransfer + yDataExtent + v_overscan
+        rawBBox = self._makeBBoxFromList(amp['rawBBox']) # total in file
+        xRawExtent, yRawExtent = rawBBox.getDimensions()
         
         from lsst.afw.table import LL, LR, UL, UR
         readCorners = dict(LL = LL, LR = LR, UL = UL, UR = UR)
@@ -126,28 +127,48 @@ class YamlCamera(cameraGeom.Camera):
             record.set(hduKey, amp['hdu'])
 
             ix, iy = amp['ixy']
-            record.setBBox(afwGeom.BoxI(
-                afwGeom.PointI(ix*xDataExtent, iy*yDataExtent), afwGeom.ExtentI(xDataExtent, yDataExtent),
-                ))
+            perAmpData = amp['perAmpData']
+            if perAmpData:
+                x0, y0 = 0, 0           # origin of data within each amp image
+            else:
+                x0, y0 = ix*xRawExtent, iy*yRawExtent
 
-            record.setRawBBox(afwGeom.Box2I(
-                afwGeom.Point2I(0, 0),
-                afwGeom.Extent2I(xRawExtent, yRawExtent),
-            ))
-            record.setRawDataBBox(afwGeom.Box2I(
-                afwGeom.Point2I(extended, nRowPreParallelTransfer),
-                afwGeom.Extent2I(xDataExtent, yDataExtent),
-            ))
-            record.setRawHorizontalOverscanBBox(afwGeom.Box2I(
-                afwGeom.Point2I(extended + xDataExtent, nRowPreParallelTransfer),
-                afwGeom.Extent2I(h_overscan, yDataExtent),
-            ))
-            record.setRawVerticalOverscanBBox(afwGeom.Box2I(
-                afwGeom.Point2I(extended, nRowPreParallelTransfer + yDataExtent),
-                afwGeom.Extent2I(xDataExtent, v_overscan),
-            ))
-            record.setRawPrescanBBox(afwGeom.Box2I())   # Should be set by an isrTask configuration
+            rawDataBBox = self._makeBBoxFromList(amp['rawDataBBox']) # Photosensitive area
+            xDataExtent, yDataExtent = rawDataBBox.getDimensions()
+            record.setBBox(afwGeom.BoxI(
+                afwGeom.PointI(ix*xDataExtent, iy*yDataExtent), rawDataBBox.getDimensions()))
+
+            rawBBox = self._makeBBoxFromList(amp['rawBBox'])
+            rawBBox.shift(afwGeom.ExtentI(x0, y0))
+            record.setRawBBox(rawBBox)
+            
+            rawDataBBox = self._makeBBoxFromList(amp['rawDataBBox'])
+            rawDataBBox.shift(afwGeom.ExtentI(x0, y0))
+            record.setRawDataBBox(rawDataBBox)
+
+            rawSerialOverscanBBox = self._makeBBoxFromList(amp['rawSerialOverscanBBox'])
+            rawSerialOverscanBBox.shift(afwGeom.ExtentI(x0, y0))
+            record.setRawHorizontalOverscanBBox(rawSerialOverscanBBox)
+
+            rawParallelOverscanBBox = self._makeBBoxFromList(amp['rawParallelOverscanBBox'])
+            rawParallelOverscanBBox.shift(afwGeom.ExtentI(x0, y0))
+            record.setRawVerticalOverscanBBox(rawParallelOverscanBBox)
+            #
+            # the "rawPrescanBBox" is interpreted by the isrTask as the region to use
+            # to estimate the bias, not the region of the data corresponding to the
+            # extended register and other serial prescan.
+            #
+            # Until this is fixed in ISR we need to set this to an empty BBox
+            if False:
+                rawSerialPrescanBBox = self._makeBBoxFromList(amp['rawSerialPrescanBBox'])
+                rawSerialPrescanBBox.shift(afwGeom.ExtentI(x0, y0))
+            else:
+                rawSerialPrescanBBox = self._makeBBoxFromList([[0, 0], [0, 0]])
+
+            record.setRawPrescanBBox(rawSerialPrescanBBox)
+
             record.setRawXYOffset(afwGeom.Extent2I(ix*xRawExtent, iy*yRawExtent))
+
             record.setReadoutCorner(readCorners[amp['readCorner']])
             record.setGain(amp['gain'])
             record.setReadNoise(amp['readNoise'])
