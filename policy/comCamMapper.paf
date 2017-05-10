@@ -25,7 +25,6 @@ exposures: {
         #template:    "raw/%(run)s/%(raft)s/%(ccd)s/%(raft)s-%(ccd)s-%(visit)06d.fits"
         composite: {
             raw_hdu: {
-                #subset: True
                 datasetType: raw_hdu
             }
             raw_amp: {
