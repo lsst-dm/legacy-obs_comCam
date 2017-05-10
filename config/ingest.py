@@ -18,7 +18,7 @@ config.parse.translators = {
 config.parse.defaults = {
     'object': "UNKNOWN",
 }
-config.parse.hdu = 1
+config.parse.hdu = 0
 
 config.register.columns = {
     'run': 'text',
