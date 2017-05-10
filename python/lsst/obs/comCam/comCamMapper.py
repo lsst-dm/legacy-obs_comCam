@@ -159,9 +159,22 @@ class ComCamMapper(CameraMapper):
         return self.query__raw(*args, **kwargs)
 
     def map_raw_md(self, *args, **kwargs):
-        """The composite type "raw" doesn't provide map_raw_md, so we defined type _raw in the .paf file
+        """The composite type "raw" doesn't provide map_raw_md,
+        so we defined type _raw in the .paf file
         """
         return self.map__raw_md(*args, **kwargs)
+
+    def map_raw_filename(self, *args, **kwargs):
+        """The composite type "raw" doesn't provide map_raw_filename,
+        so we defined type _raw in the .paf file
+        """
+        return self.map__raw_filename(*args, **kwargs)
+
+    def bypass_raw_filename(self, *args, **kwargs):
+        """The composite type "raw" doesn't provide bypass_raw_filename,
+        so we defined type _raw in the .paf file
+        """
+        return self.bypass__raw_filename(*args, **kwargs)
 
     #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     #
