@@ -33,18 +33,26 @@ radialCoeffs : [0.0, 1.0, 0.0, 1.0]     # radial distortion coefficients (c_0 + 
 # A single amplifier ("segment" to the camera team)
 #
 AMP_E2V : &AMP_E2V                      # N.b. the assembly of E2V amps into a CCD has not been checked
-                                        # It also needs to be converted to BBox form (see AMP_ITL)
+                                        # in detail (e.g. off by one errors)
     # trimmed
     dataExtent : [512, 2002]
     readCorner : LL
+    #                         [[x0,  y0], [xsize, ysize]]
+    rawBBox                 : [[0,    0], [576,    2048]]  # total size of one amp's raw data
 
-    nRowPreParallelTransfer : 0         # number of rows digitised before first parallel transfer
-    extended : 10                       # number of pixels in the extended register
-    extended0 : 0                       # first pixel in the extended register
-    h_overscan : 22                     # number of overscan pixels in x (serial)
-    h_overscan0 : 0                     # first overscan pixel in x (serial)
-    v_overscan : 46                     # number of overscan pixel in y (parallel)
-    v_overscan0 : 0                     # first overscan pixel in y (parallel)
+    rawDataBBox             : [[10,   0], [512,    2002]]  # data region in raw data
+    rawSerialPrescanBBox    : [[0,    0], [10,     2002]]  # serial prescan (often == extended)
+    rawSerialOverscanBBox   : [[522,  0], [54,     2002]]  # serial overscan
+    rawParallelPrescanBBox  : [[0,    1], [0,         0]]  # pixels digitised before first parallel transfer
+    rawParallelOverscanBBox : [[10, 2002], [512,     46]]  # parallel overscan
+
+    #nRowPreParallelTransfer : 0         # number of rows digitised before first parallel transfer
+    #extended : 10                       # number of pixels in the extended register
+    #extended0 : 0                       # first pixel in the extended register
+    #h_overscan : 22                     # number of overscan pixels in x (serial)
+    #h_overscan0 : 0                     # first overscan pixel in x (serial)
+    #v_overscan : 46                     # number of overscan pixel in y (parallel)
+    #v_overscan0 : 0                     # first overscan pixel in y (parallel)
 
     saturation : 65535                  # saturation level, DN XXX Should this be in electrons?
 
@@ -75,7 +83,7 @@ AMP_ITL : &AMP_ITL
     linearityCoeffs : [0, 65535]        # == [linearityThreshold, linearityMax]
 
 AMP : &AMP
-  << : *AMP_ITL
+  << : *AMP_E2V
   perAmpData : True                     # data is provided independentally for each amplifier (a la LSST)
 #
 # A single CCD ("sensor" to the camera team)
@@ -99,11 +107,14 @@ CCD : &CCD
 #
 # All the CCDs present in this file
 #
-CCDs :
+rafts:
+   serial : LCA-11021_RTM-005-Dev
+
+CCDs : &CCDs
    S00: &S00                             # Sensor (0, 0)
       << : *CCD
       id : 0
-      serial : ITL-3800C-145-Dev
+      serial : E2V-CCD250-220-Dev
       refpos : [2001.5, 2047.5]
       offset : [-41.5, -40.5]
 
@@ -160,7 +171,7 @@ CCDs :
            "07": &A07
              <<: *AMP
              hdu : 9
-             flipXY : [True, True]
+             flipXY : [False, True]
              ixy : [7, 1]
              gain : 1.111
              readNoise : 6.66
@@ -207,10 +218,10 @@ CCDs :
              gain : 1.048
              readNoise : 6.66
 
-   S01:                                 # Sensor (0, 1)
+   S01: &S01                            # Sensor (0, 1)
       << : *S00
       id : 1
-      serial : ITL-3800C-022-Dev
+      serial : E2V-CCD250-239-Dev
       offset : [0.0, -40.5]
 
       amplifiers:
@@ -280,10 +291,10 @@ CCDs :
              gain : 0.750
              readNoise : 7.66
              
-   S02:                                 # Sensor (0, 2)
+   S02: &S02                            # Sensor (0, 2)
       << : *S00
       id : 2
-      serial : ITL-3800C-041-Dev
+      serial : E2V-CCD250-154-Dev
       offset : [41.5, -40.5]
 
       amplifiers:
@@ -353,10 +364,10 @@ CCDs :
              gain : 1.072
              readNoise : 7.66
              
-   S10:                                 # Sensor (1, 0)
+   S10: &S10                            # Sensor (1, 0)
       << : *S00
       id : 3
-      serial : ITL-3800C-100-Dev
+      serial : E2V-CCD250-165-Dev
       offset : [-41.5, 0.0]
 
       amplifiers:
@@ -426,10 +437,10 @@ CCDs :
              gain : 1.275
              readNoise : 7.66
 
-   S11:                                 # Sensor (1, 1)
+   S11: &S11                            # Sensor (1, 1)
       << : *S00
       id : 4
-      serial : ITL-3800C-017-Dev
+      serial : E2V-CCD250-130-Dev
       offset : [0.0, 0.0]
 
       amplifiers:
@@ -499,10 +510,10 @@ CCDs :
              gain : 0.118
              readNoise : 7.66
              
-   S12:                                 # Sensor (1, 2)
+   S12: &S12                            # Sensor (1, 2)
       << : *S00
       id : 5
-      serial : ITL-3800C-018-Dev
+      serial : E2V-CCD250-153-Dev
       offset : [41.5, 0.0]
 
       amplifiers:
@@ -572,10 +583,10 @@ CCDs :
              gain : 1.082
              readNoise : 7.66
 
-   S20:                                 # Sensor (2, 0)
+   S20: &S20                            # Sensor (2, 0)
       << : *S00
       id : 6
-      serial : ITL-3800C-102-Dev
+      serial : E2V-CCD250-163-Dev
       offset : [-41.5, 40.5]
 
       amplifiers:
@@ -645,10 +656,10 @@ CCDs :
              gain : 0.910
              readNoise : 7.66
 
-   S21:                                 # Sensor (2, 1)
+   S21: &S21                            # Sensor (2, 1)
       << : *S00
       id : 7
-      serial : ITL-3800C-146-Dev
+      serial : E2V-CCD250-216-Dev
       offset : [0.0, 40.5]
 
       amplifiers:
@@ -718,10 +729,10 @@ CCDs :
              gain : 0.993
              readNoise : 7.66
              
-   S22:                                 # Sensor (2, 2)
+   S22: &S22                            # Sensor (2, 2)
       << : *S00
       id : 8
-      serial : ITL-3800C-103-Dev
+      serial : E2V-CCD250-252-Dev
       offset : [41.5, 40.5]
 
       amplifiers:
