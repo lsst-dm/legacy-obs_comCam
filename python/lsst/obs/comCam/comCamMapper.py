@@ -132,7 +132,7 @@ class ComCamMapper(CameraMapper):
             dataId = dataId.copy()
             channels = [dataId.pop('channel')]
         else:
-            channels = range(nChannel) # we want all possible channels
+            channels = range(1, nChannel + 1) # we want all possible channels
 
         if "channel" in format:           # they asked for a channel, but we mustn't query for it
             format = list(format)
@@ -152,29 +152,46 @@ class ComCamMapper(CameraMapper):
                     dids.append(tuple(did))
 
         return dids
-
+    #
+    # The composite type "raw" doesn't provide e.g. query_raw, so we defined type _raw in the .paf file
+    # with the same template, and forward requests as necessary
+    #
     def query_raw(self, *args, **kwargs):
-        """The composite type "raw" doesn't provide query_raw, so we defined type _raw in the .paf file
-        """
         return self.query__raw(*args, **kwargs)
 
     def map_raw_md(self, *args, **kwargs):
-        """The composite type "raw" doesn't provide map_raw_md,
-        so we defined type _raw in the .paf file
-        """
         return self.map__raw_md(*args, **kwargs)
 
     def map_raw_filename(self, *args, **kwargs):
-        """The composite type "raw" doesn't provide map_raw_filename,
-        so we defined type _raw in the .paf file
-        """
         return self.map__raw_filename(*args, **kwargs)
 
     def bypass_raw_filename(self, *args, **kwargs):
-        """The composite type "raw" doesn't provide bypass_raw_filename,
-        so we defined type _raw in the .paf file
-        """
         return self.bypass__raw_filename(*args, **kwargs)
+
+    def map_raw_visitInfo(self, *args, **kwargs):
+        return self.map__raw_visitInfo(*args, **kwargs)
+
+    def bypass_raw_visitInfo(self, datasetType, pythonType, location, dataId):
+        if False:
+            # afwImage.readMetadata() doesn't honour [hdu] suffixes in filenames
+            #
+            # We could workaround this by moving the "else" block into obs_base,
+            # or by changing afw
+            #
+            return self.bypass__raw_visitInfo(datasetType, pythonType, location, dataId)
+        else:
+            import re
+            import lsst.afw.image as afwImage
+            
+            fileName = location.getLocationsWithRoot()[0]
+            mat = re.search(r"\[(\d+)\]$", fileName)
+            if mat:
+                hdu = int(mat.group(1))
+                md = afwImage.readMetadata(fileName, hdu=hdu)
+            else:
+                md = afwImage.readMetadata(fileName) # or hdu = INT_MIN; -(1 << 31)
+
+            return afwImage.VisitInfo(md)
 
     #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     #
