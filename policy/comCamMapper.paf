@@ -12,7 +12,7 @@ defaultLevel: "visit"
 
 exposures: {
     _raw: {
-        template:    "raw/%(run)s/%(raft)s/%(ccd)s/%(raft)s-%(ccd)s-%(visit)06d.fits"
+        template:    "raw/%(run)s/%(raft)s/%(ccd)s/%(raft)s-%(ccd)s-%(visit)06d.fits[0]"
         python:      "lsst.daf.base.PropertyList"
         persistable: "PropertyList"
         storage:     "FitsStorage"
@@ -22,7 +22,7 @@ exposures: {
     raw: {
         inputOnly: True
         # template is ignored
-        #template:    "raw/%(run)s/%(raft)s/%(ccd)s/%(raft)s-%(ccd)s-%(visit)06d.fits"
+        #template:    "raw/%(run)s/%(raft)s/%(ccd)s/%(raft)s-%(ccd)s-%(visit)06d.fits[0]"
         composite: {
             raw_hdu: {
                 datasetType: raw_hdu
@@ -160,7 +160,7 @@ calibrations: {
 
 datasets: {
     raw_hdu: {
-        template:    "raw/%(run)s/%(raft)s/%(ccd)s/%(raft)s-%(ccd)s-%(visit)06d.fits"
+        template:    "raw/%(run)s/%(raft)s/%(ccd)s/%(raft)s-%(ccd)s-%(visit)06d.fits[0]"
         python:      "lsst.daf.base.propertyList"
         persistable: "PropertyList"
         storage:     "FitsStorage"
