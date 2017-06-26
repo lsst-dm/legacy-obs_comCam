@@ -88,7 +88,7 @@ exposures: {
 
 calibrations: {
     bias: {
-        template:    "bias/%(calibDate)s/bias-%(calibDate)s.fits.gz"
+        template:    "bias/%(calibDate)s/bias-%(ccd)s-%(calibDate)s.fits"
         python:      "lsst.afw.image.DecoratedImageF"
         persistable: "DecoratedImageF"
         storage:     "FitsStorage"
@@ -104,7 +104,7 @@ calibrations: {
         validEndName: validEnd
     }
     dark: {
-        template:    "dark/%(calibDate)s/dark-%(calibDate)s.fits.gz"
+        template:    "dark/%(calibDate)s/dark-%(ccd)s-%(calibDate)s.fits"
         python:      "lsst.afw.image.DecoratedImageF"
         persistable: "DecoratedImageF"
         storage:     "FitsStorage"
@@ -121,7 +121,7 @@ calibrations: {
 
     }
     flat: {
-        template:    "flat/%(filter)s/%(calibDate)s/flat_%(filter)s_%(calibDate)s.fits.gz"
+        template:    "flat/%(filter)s/%(calibDate)s/flat_%(ccd)s-%(filter)s_%(calibDate)s.fits"
         python:      "lsst.afw.image.DecoratedImageF"
         persistable: "DecoratedImageF"
         storage:     "FitsStorage"
@@ -139,7 +139,7 @@ calibrations: {
         validEndName: validEnd
     }
     fringe: {
-        template:    "fringe/%(filter)s/%(calibDate)s/fringe_%(filter)s_%(calibDate)s.fits.gz"
+        template:    "fringe/%(filter)s/%(calibDate)s/fringe_%(ccd)s-%(filter)s_%(calibDate)s.fits"
         python:      "lsst.afw.image.MaskedImageF"
         persistable: "MaskedImageF"
         storage:     "FitsStorage"

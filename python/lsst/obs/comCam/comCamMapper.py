@@ -21,8 +21,8 @@
 #
 import lsst.afw.image.utils as afwImageUtils
 import lsst.afw.geom as afwGeom
-#import lsst.afw.image as afwImage
-from lsst.obs.base import CameraMapper, MakeRawVisitInfo
+import lsst.afw.image as afwImage
+from lsst.obs.base import CameraMapper, MakeRawVisitInfo, exposureFromImage
 import lsst.pex.policy as pexPolicy
 
 from lsst.obs.comCam import ComCam
@@ -35,16 +35,30 @@ class ComCamMakeRawVisitInfo(MakeRawVisitInfo):
 
     def setArgDict(self, md, argDict):
         """Fill an argument dict with arguments for makeVisitInfo and pop associated metadata
+
+        Parameters
+        ----------
+        md : `lsst.daf.base.PropertyList or PropertySet`
+            image metadata
+        argDict : `dict`
+            The argument dictionary used to construct the visit info, modified in place
         """
         super(ComCamMakeRawVisitInfo, self).setArgDict(md, argDict)
+        argDict["darkTime"] = self.popFloat(md, "DARKTIME")
+
+        # Done setting argDict; check values now that all the header keywords have been consumed
+        argDict["darkTime"] = self.getDarkTime(argDict)
+ 
 
     def getDateAvg(self, md, exposureTime):
         """Return date at the middle of the exposure
 
-        @param[in,out] md  metadata, as an lsst.daf.base.PropertyList or PropertySet;
-            items that are used are stripped from the metadata
-            (except TIMESYS, because it may apply to more than one other keyword).
-        @param[in] exposureTime  exposure time (sec)
+        Parameters
+        ----------
+        md : `lsst.daf.base.PropertyList or PropertySet`
+            image metadata
+        exposureTime : `float`
+            exposure time, measure in seconds
         """
         dateObs = self.popIsoDate(md, "DATE-OBS")
         return self.offsetDate(dateObs, 0.5*exposureTime)
@@ -52,7 +66,21 @@ class ComCamMakeRawVisitInfo(MakeRawVisitInfo):
 def assemble_raw(dataId, componentInfo, cls):
     """Called by the butler to construct the composite type "raw"
 
-    Note that we still need to define "_raw" and copy various fields over.  Sigh.
+    Note that we still need to define "_raw" and copy various fields over.
+
+    Parameters
+    ----------
+    dataId : `lsst.daf.persistence.dataId.DataId`
+        the data ID
+    componentInfo : `dict`
+        dict containing the components, as defined by the composite definition in the mapper policy
+    cls : 'object'
+        unused
+
+    Returns
+    -------
+    exposure : `lsst.afw.image.exposure.exposure`
+        The assembled exposure
     """
     from lsst.ip.isr import AssembleCcdTask
 
@@ -192,6 +220,10 @@ class ComCamMapper(CameraMapper):
                 md = afwImage.readMetadata(fileName) # or hdu = INT_MIN; -(1 << 31)
 
             return afwImage.VisitInfo(md)
+
+    def std_raw_amp(self, item, dataId):
+        return self._standardizeExposure(self.exposures['raw_amp'], item, dataId,
+                                         trimmed=False, setVisitInfo=False)
 
     #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     #
