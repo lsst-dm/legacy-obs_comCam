@@ -28,7 +28,7 @@ config.register.columns = {
     'dateObs': 'text',
     'expTime': 'double',
     'raft': 'text',
-    'ccd': 'int',
+    'ccd': 'text',
     'object': 'text',
     'imageType': 'text',
     'testType': 'text',
