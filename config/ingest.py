@@ -1,6 +1,7 @@
 from lsst.obs.comCam.ingest import ComCamParseTask
 
 config.parse.retarget(ComCamParseTask)
+
 config.parse.translation = {
     'expTime': 'EXPTIME',
     'object': 'OBJECT',
@@ -14,6 +15,7 @@ config.parse.translation = {
 }
 config.parse.translators = {
     'visit': 'translate_visit',
+    'wavelength': 'translate_wavelength',
 }
 config.parse.defaults = {
     'object': "UNKNOWN",
@@ -25,6 +27,7 @@ config.register.columns = {
     'visit': 'int',
     'basename': 'text',
     'filter': 'text',
+    'date': 'text',
     'dateObs': 'text',
     'expTime': 'double',
     'raft': 'text',
@@ -34,5 +37,6 @@ config.register.columns = {
     'testType': 'text',
     'lsstSerial': 'text',
     'field': 'text',
+    'wavelength': 'int',
 }
 config.register.visit = list(config.register.columns.keys())
