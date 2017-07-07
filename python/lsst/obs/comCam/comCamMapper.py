@@ -21,8 +21,8 @@
 #
 import lsst.afw.image.utils as afwImageUtils
 import lsst.afw.geom as afwGeom
-#import lsst.afw.image as afwImage
-from lsst.obs.base import CameraMapper, MakeRawVisitInfo
+import lsst.afw.image as afwImage
+from lsst.obs.base import CameraMapper, MakeRawVisitInfo, exposureFromImage
 import lsst.pex.policy as pexPolicy
 
 from lsst.obs.comCam import ComCam
@@ -37,6 +37,7 @@ class ComCamMakeRawVisitInfo(MakeRawVisitInfo):
         """Fill an argument dict with arguments for makeVisitInfo and pop associated metadata
         """
         super(ComCamMakeRawVisitInfo, self).setArgDict(md, argDict)
+        # argDict['darkTime'] = self.getDarkTime(argDict)
 
     def getDateAvg(self, md, exposureTime):
         """Return date at the middle of the exposure
@@ -253,6 +254,17 @@ class ComCamMapper(CameraMapper):
 
     def X_std_bias(self, item, dataId):
         return self.standardizeCalib("bias", item, dataId)
+
+    def std_dark(self, item, dataId):
+        """Standardiation of master dark frame. Must only be called on master darks.
+        @param[in,out] item the master dark, as an image-like object
+        @param[in] dataId unused
+        """
+        exp = exposureFromImage(item)
+        if not exp.getInfo().hasVisitInfo():
+            # hard-coded, but pipe_drivers always(?) normalises darks to a darktime of 1s so this is OK?
+            exp.getInfo().setVisitInfo(afwImage.VisitInfo(darkTime=1.0))
+        return exp
 
     def X_std_dark(self, item, dataId):
         exp = self.standardizeCalib("dark", item, dataId)
