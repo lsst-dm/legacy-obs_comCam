@@ -194,6 +194,10 @@ class ComCamMapper(CameraMapper):
 
             return afwImage.VisitInfo(md)
 
+    def std_raw_amp(self, item, dataId):
+        return self._standardizeExposure(self.exposures['raw_amp'], item, dataId,
+                                         trimmed=False, setVisitInfo=False)
+
     #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     #
     # All of these have an X prepended and are thus not currently live
