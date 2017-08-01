@@ -1,8 +1,8 @@
-from lsst.obs.monocam.ingest import MonocamCalibsParseTask
-config.parse.retarget(MonocamCalibsParseTask)
+from lsst.obs.comCam.ingest import ComCamCalibsParseTask
+config.parse.retarget(ComCamCalibsParseTask)
 
 config.register.columns = {'filter': 'text',
-                           'ccd': 'int',
+                           'ccd': 'text',
                            'calibDate': 'text',
                            'validStart': 'text',
                            'validEnd': 'text',
