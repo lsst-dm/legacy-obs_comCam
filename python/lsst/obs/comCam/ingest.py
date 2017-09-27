@@ -3,7 +3,7 @@ import os
 import re
 from lsst.pipe.tasks.ingest import ParseTask
 from lsst.pipe.tasks.ingestCalibs import CalibsParseTask
-import lsst.log as lsstLog 
+import lsst.log as lsstLog
 
 EXTENSIONS = ["fits", "gz", "fz"]  # Filename extensions to strip off
 
@@ -19,7 +19,7 @@ class ComCamParseTask(ParseTask):
 
     def getInfo(self, filename):
         """ Get the basename and other data which is only available from the filename/path.
-        
+
         This seems fragile, but this is how the teststand data will *always* be written out, 
         as the software has been "frozen" as they are now in production mode.
 
@@ -83,9 +83,10 @@ class ComCamParseTask(ParseTask):
         """
         raw_wl = md.get("MONOWL")
         wl = int(round(raw_wl))
-        if abs(raw_wl-wl)>=0.1:
+        if abs(raw_wl-wl) >= 0.1:
             logger = lsstLog.Log.getLogger('obs.comCam.ingest')
-            logger.warn('Translated significantly non-integer wavelength; %s is more than 0.1nm from an integer value', raw_wl)
+            logger.warn(
+                'Translated significantly non-integer wavelength; %s is more than 0.1nm from an integer value', raw_wl)
         return wl
 
     def translate_visit(self, md):
@@ -108,6 +109,7 @@ class ComCamParseTask(ParseTask):
         return int(1e5*mmjd)            # 86400s per day, so we need this resolution
 
 ##############################################################################################################
+
 
 class ComCamCalibsParseTask(CalibsParseTask):
     """Parser for calibs"""

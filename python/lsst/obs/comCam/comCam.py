@@ -23,6 +23,7 @@ import os.path
 import lsst.utils as utils
 from lsst.obs.base.yamlCamera import YamlCamera
 
+
 class ComCam(YamlCamera):
     """The Commissioning Camera (comCam)
     """
