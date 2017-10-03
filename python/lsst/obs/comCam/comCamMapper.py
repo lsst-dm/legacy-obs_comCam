@@ -19,6 +19,8 @@
 # the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
+from __future__ import division, print_function
+
 import lsst.afw.image.utils as afwImageUtils
 import lsst.afw.geom as afwGeom
 import lsst.afw.image as afwImage
@@ -28,6 +30,7 @@ import lsst.pex.policy as pexPolicy
 from lsst.obs.comCam import ComCam
 
 __all__ = ["ComCamMapper"]
+
 
 class ComCamMakeRawVisitInfo(MakeRawVisitInfo):
     """functor to make a VisitInfo from the FITS header of a raw image
@@ -48,7 +51,6 @@ class ComCamMakeRawVisitInfo(MakeRawVisitInfo):
 
         # Done setting argDict; check values now that all the header keywords have been consumed
         argDict["darkTime"] = self.getDarkTime(argDict)
- 
 
     def getDateAvg(self, md, exposureTime):
         """Return date at the middle of the exposure
@@ -62,6 +64,7 @@ class ComCamMakeRawVisitInfo(MakeRawVisitInfo):
         """
         dateObs = self.popIsoDate(md, "DATE-OBS")
         return self.offsetDate(dateObs, 0.5*exposureTime)
+
 
 def assemble_raw(dataId, componentInfo, cls):
     """Called by the butler to construct the composite type "raw"
@@ -110,6 +113,7 @@ def assemble_raw(dataId, componentInfo, cls):
     exposure = ccm.std_raw(exposure, dataId)
 
     return exposure
+
 
 class ComCamMapper(CameraMapper):
     packageName = 'obs_comCam'
@@ -184,6 +188,7 @@ class ComCamMapper(CameraMapper):
     # The composite type "raw" doesn't provide e.g. query_raw, so we defined type _raw in the .paf file
     # with the same template, and forward requests as necessary
     #
+
     def query_raw(self, *args, **kwargs):
         return self.query__raw(*args, **kwargs)
 
@@ -210,7 +215,7 @@ class ComCamMapper(CameraMapper):
         else:
             import re
             import lsst.afw.image as afwImage
-            
+
             fileName = location.getLocationsWithRoot()[0]
             mat = re.search(r"\[(\d+)\]$", fileName)
             if mat:
@@ -246,7 +251,7 @@ class ComCamMapper(CameraMapper):
                     # These may be hot pixels, but we'll treat them as bad until we can get more data
                     (3801, 666, 3805, 669),
                     (3934, 582, 3936, 589),
-                )]
+        )]
 
     def X__defectLookup(self, dataId):
         """ This function needs to return a non-None value otherwise the mapper gives up
