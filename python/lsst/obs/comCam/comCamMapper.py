@@ -122,7 +122,7 @@ class ComCamMapper(CameraMapper):
     MakeRawVisitInfoClass = ComCamMakeRawVisitInfo
 
     def __init__(self, inputPolicy=None, **kwargs):
-        policyFile = dafPersist.Policy.defaultPolicyFile(self.packageName, "comCamMapper.paf", "policy")
+        policyFile = dafPersist.Policy.defaultPolicyFile(self.packageName, "comCamMapper.yaml", "policy")
         policy = dafPersist.Policy(policyFile)
 
         CameraMapper.__init__(self, policy, os.path.dirname(policyFile), **kwargs)
