@@ -21,11 +21,13 @@
 #
 from __future__ import division, print_function
 
+import os
+
 import lsst.afw.image.utils as afwImageUtils
 import lsst.afw.geom as afwGeom
 import lsst.afw.image as afwImage
 from lsst.obs.base import CameraMapper, MakeRawVisitInfo, exposureFromImage
-import lsst.pex.policy as pexPolicy
+import lsst.daf.persistence as dafPersist
 
 from lsst.obs.comCam import ComCam
 
@@ -120,10 +122,10 @@ class ComCamMapper(CameraMapper):
     MakeRawVisitInfoClass = ComCamMakeRawVisitInfo
 
     def __init__(self, inputPolicy=None, **kwargs):
-        policyFile = pexPolicy.DefaultPolicyFile(self.packageName, "comCamMapper.paf", "policy")
-        policy = pexPolicy.Policy(policyFile)
+        policyFile = dafPersist.Policy.defaultPolicyFile(self.packageName, "comCamMapper.paf", "policy")
+        policy = dafPersist.Policy(policyFile)
 
-        CameraMapper.__init__(self, policy, policyFile.getRepositoryPath(), **kwargs)
+        CameraMapper.__init__(self, policy, os.path.dirname(policyFile), **kwargs)
         #
         # The composite objects don't seem to set these
         #
