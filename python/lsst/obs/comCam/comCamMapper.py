@@ -19,6 +19,8 @@
 # the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 #
+"""The ComCam Mapper."""  # necessary to suppress D100 flake8 warning.
+
 from __future__ import division, print_function
 
 import os
@@ -26,7 +28,7 @@ import os
 import lsst.afw.image.utils as afwImageUtils
 import lsst.afw.geom as afwGeom
 import lsst.afw.image as afwImage
-from lsst.obs.base import CameraMapper, MakeRawVisitInfo, exposureFromImage
+from lsst.obs.base import CameraMapper, MakeRawVisitInfo
 import lsst.daf.persistence as dafPersist
 
 from lsst.obs.comCam import ComCam
@@ -35,11 +37,10 @@ __all__ = ["ComCamMapper"]
 
 
 class ComCamMakeRawVisitInfo(MakeRawVisitInfo):
-    """functor to make a VisitInfo from the FITS header of a raw image
-    """
+    """functor to make a VisitInfo from the FITS header of a raw image."""
 
     def setArgDict(self, md, argDict):
-        """Fill an argument dict with arguments for makeVisitInfo and pop associated metadata
+        """Fill an argument dict with arguments for makeVisitInfo and pop associated metadata.
 
         Parameters
         ----------
@@ -55,7 +56,7 @@ class ComCamMakeRawVisitInfo(MakeRawVisitInfo):
         argDict["darkTime"] = self.getDarkTime(argDict)
 
     def getDateAvg(self, md, exposureTime):
-        """Return date at the middle of the exposure
+        """Return date at the middle of the exposure.
 
         Parameters
         ----------
@@ -69,7 +70,7 @@ class ComCamMakeRawVisitInfo(MakeRawVisitInfo):
 
 
 def assemble_raw(dataId, componentInfo, cls):
-    """Called by the butler to construct the composite type "raw"
+    """Called by the butler to construct the composite type "raw".
 
     Note that we still need to define "_raw" and copy various fields over.
 
@@ -118,10 +119,13 @@ def assemble_raw(dataId, componentInfo, cls):
 
 
 class ComCamMapper(CameraMapper):
+    """The Mapper for ComCam."""
+
     packageName = 'obs_comCam'
     MakeRawVisitInfoClass = ComCamMakeRawVisitInfo
 
     def __init__(self, inputPolicy=None, **kwargs):
+        """Initialization for the ComCam Mapper."""
         policyFile = dafPersist.Policy.defaultPolicyFile(self.packageName, "comCamMapper.yaml", "policy")
         policy = dafPersist.Policy(policyFile)
 
@@ -132,15 +136,14 @@ class ComCamMapper(CameraMapper):
         for d in (self.mappings, self.exposures):
             d['raw'] = d['_raw']
 
-        #self.filterIdMap = {}           # where is this used?  Generating objIds??
+        # self.filterIdMap = {}           # where is this used?  Generating objIds??
 
         afwImageUtils.defineFilter('NONE', 0.0, alias=['no_filter', "OPEN"])
         afwImageUtils.defineFilter('275CutOn', 0.0, alias=[])
         afwImageUtils.defineFilter('550CutOn', 0.0, alias=[])
 
     def _makeCamera(self, policy, repositoryDir):
-        """Make a camera (instance of lsst.afw.cameraGeom.Camera) describing the camera geometry
-        """
+        """Make a camera (instance of lsst.afw.cameraGeom.Camera) describing the camera geometry."""
         return ComCam()
 
     def _extractDetectorName(self, dataId):
@@ -155,7 +158,7 @@ class ComCamMapper(CameraMapper):
         return int(visit)
 
     def query_raw_amp(self, format, dataId):
-        """!Return a list of tuples of values of the fields specified in format, in order
+        """!Return a list of tuples of values of the fields specified in format, in order.
 
         @param format  The desired set of keys
         @param dataId  A possible-incomplete dataId
@@ -166,11 +169,11 @@ class ComCamMapper(CameraMapper):
             dataId = dataId.copy()
             channels = [dataId.pop('channel')]
         else:
-            channels = range(1, nChannel + 1) # we want all possible channels
+            channels = range(1, nChannel + 1)  # we want all possible channels
 
         if "channel" in format:           # they asked for a channel, but we mustn't query for it
             format = list(format)
-            channelIndex = format.index('channel') # where channel values should go
+            channelIndex = format.index('channel')  # where channel values should go
             format.pop(channelIndex)
         else:
             channelIndex = None
@@ -192,18 +195,38 @@ class ComCamMapper(CameraMapper):
     #
 
     def query_raw(self, *args, **kwargs):
+        """Magic method that is called automatically if it exists.
+
+        This code redirects the call to the right place, necessary because of leading underscore on _raw.
+        """
         return self.query__raw(*args, **kwargs)
 
     def map_raw_md(self, *args, **kwargs):
+        """Magic method that is called automatically if it exists.
+
+        This code redirects the call to the right place, necessary because of leading underscore on _raw.
+        """
         return self.map__raw_md(*args, **kwargs)
 
     def map_raw_filename(self, *args, **kwargs):
+        """Magic method that is called automatically if it exists.
+
+        This code redirects the call to the right place, necessary because of leading underscore on _raw.
+        """
         return self.map__raw_filename(*args, **kwargs)
 
     def bypass_raw_filename(self, *args, **kwargs):
+        """Magic method that is called automatically if it exists.
+
+        This code redirects the call to the right place, necessary because of leading underscore on _raw.
+        """
         return self.bypass__raw_filename(*args, **kwargs)
 
     def map_raw_visitInfo(self, *args, **kwargs):
+        """Magic method that is called automatically if it exists.
+
+        This code redirects the call to the right place, necessary because of leading underscore on _raw.
+        """
         return self.map__raw_visitInfo(*args, **kwargs)
 
     def bypass_raw_visitInfo(self, datasetType, pythonType, location, dataId):
@@ -224,7 +247,7 @@ class ComCamMapper(CameraMapper):
                 hdu = int(mat.group(1))
                 md = afwImage.readMetadata(fileName, hdu=hdu)
             else:
-                md = afwImage.readMetadata(fileName) # or hdu = INT_MIN; -(1 << 31)
+                md = afwImage.readMetadata(fileName)  # or hdu = INT_MIN; -(1 << 31)
 
             return afwImage.VisitInfo(md)
 
@@ -232,22 +255,23 @@ class ComCamMapper(CameraMapper):
         return self._standardizeExposure(self.exposures['raw_amp'], item, dataId,
                                          trimmed=False, setVisitInfo=False)
 
-    #-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-    #
-    # All of these have an X prepended and are thus not currently live
-    #
     def X_validate(self, dataId):
+        """Method has X_ prepended and thus not currently live."""
         visit = dataId.get("visit")
         if visit is not None and not isinstance(visit, int):
             dataId["visit"] = int(visit)
         return dataId
 
     def X__setCcdExposureId(self, propertyList, dataId):
+        """Method has X_ prepended and thus not currently live."""
         propertyList.set("Computed_ccdExposureId", self._computeCcdExposureId(dataId))
         return propertyList
 
     def X_bypass_defects(self, datasetType, pythonType, location, dataId):
-        """ since we have no defects, return an empty list.  Fix this when defects exist """
+        """Method has X_ prepended and thus not currently live.
+
+        Since we have no defects, return an empty list. Fix this when defects exist.
+        """
         return [afwImage.DefectBase(afwGeom.Box2I(afwGeom.Point2I(x0, y0), afwGeom.Point2I(x1, y1))) for
                 x0, y0, x1, y1 in (
                     # These may be hot pixels, but we'll treat them as bad until we can get more data
@@ -256,14 +280,17 @@ class ComCamMapper(CameraMapper):
         )]
 
     def X__defectLookup(self, dataId):
-        """ This function needs to return a non-None value otherwise the mapper gives up
+        """Method has X_ prepended and thus not currently live.
+
+        Also, method is hacky method and should not exist.
+        This function needs to return a non-None value otherwise the mapper gives up
         on trying to find the defects.  I wanted to be able to return a list of defects constructed
         in code rather than reconstituted from persisted files, so I return a dummy value.
         """
         return "this_is_a_hack"
 
     def X_standardizeCalib(self, dataset, item, dataId):
-        """Standardize a calibration image read in by the butler
+        """Standardize a calibration image read in by the butler.
 
         Some calibrations are stored on disk as Images instead of MaskedImages
         or Exposures.  Here, we convert it to an Exposure.
@@ -291,15 +318,19 @@ class ComCamMapper(CameraMapper):
         return self._standardizeExposure(mapping, exp, dataId)
 
     def X_std_bias(self, item, dataId):
+        """Method has X_ prepended and thus not currently live."""
         return self.standardizeCalib("bias", item, dataId)
 
     def X_std_dark(self, item, dataId):
+        """Method has X_ prepended and thus not currently live."""
         exp = self.standardizeCalib("dark", item, dataId)
         # exp.getCalib().setExptime(1.0)
         return exp
 
     def X_std_flat(self, item, dataId):
+        """Method has X_ prepended and thus not currently live."""
         return self.standardizeCalib("flat", item, dataId)
 
     def X_std_fringe(self, item, dataId):
+        """Method has X_ prepended and thus not currently live."""
         return self.standardizeCalib("flat", item, dataId)
