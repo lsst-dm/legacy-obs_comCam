@@ -30,7 +30,6 @@ config.register.columns = {
     'date': 'text',
     'dateObs': 'text',
     'expTime': 'double',
-    'raft': 'text',
     'ccd': 'text',
     'object': 'text',
     'imageType': 'text',
