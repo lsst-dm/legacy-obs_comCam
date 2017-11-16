@@ -14,7 +14,7 @@ exposures:
     python: lsst.daf.base.PropertyList
     storage: FitsStorage
     tables: raw
-    template: raw/%(run)s/%(raft)s/%(ccd)s/%(raft)s-%(ccd)s-%(visit)06d.fits[0]
+    template: raw/%(run)s/%(ccd)s/%(ccd)s-%(visit)06d.fits[0]
   raw:
     assembler: lsst.obs.comCam.comCamMapper.assemble_raw
     composite:
@@ -26,25 +26,23 @@ exposures:
     inputOnly: true
   raw_amp:
     level: Amp
+    # NB If type is changed to an exposureI then constructDark breaks. If changing this be sure to test calibs
     persistable: DecoratedImageI
     python: lsst.afw.image.DecoratedImageI
     storage: FitsStorage
     tables: raw
-    template: raw/%(run)s/%(raft)s/%(ccd)s/%(raft)s-%(ccd)s-%(visit)06d.fits[%(channel)d]
+    template: raw/%(run)s/%(ccd)s/%(ccd)s-%(visit)06d.fits[%(channel)d]
   postISRCCD:
-    level: Ccd
-    persistable: ExposureF
-    python: lsst.afw.image.ExposureF
-    storage: FitsStorage
-    tables: raw
-    template: postISRCCD/postISRCCD_v%(visit)d_f%(filter)s.fits
+    template: 'postISRCCD/postISRCCD_v%(visit)d_%(ccd)s_f%(filter)s.fits'
   calexp:
-    level: Ccd
-    persistable: ExposureF
-    python: lsst.afw.image.ExposureF
-    storage: FitsStorage
-    tables: raw
-    template: calexp/calexp_v%(visit)d_f%(filter)s.fits
+    template: calexp/calexp_v%(visit)d_%(ccd)s_f%(filter)s.fits
+  icExp:
+    template: icExp/icExp_v%(visit)d_%(ccd)s_f%(filter)s.fits
+  wcs:
+    tables:
+    - raw
+    - raw_visit
+    template: wcs/v%(visit)d_%(ccd)s_f%(filter)s.wcs.fits
   fcr:
     level: Ccd
     persistable: ExposureI
@@ -53,66 +51,46 @@ exposures:
     tables:
     - raw
     - raw_visit
-    template: fcr/v%(visit)d_f%(filter)s.fcr.fits
-  icExp:
-    level: Ccd
-    persistable: ExposureF
-    python: lsst.afw.image.ExposureF
-    storage: FitsStorage
-    tables: raw
-    template: icExp/icExp_v%(visit)d_f%(filter)s.fits
-  wcs:
-    level: Ccd
-    persistable: ExposureI
-    python: lsst.afw.image.ExposureI
-    storage: FitsStorage
-    tables:
-    - raw
-    - raw_visit
-    template: wcs/v%(visit)d_f%(filter)s.wcs.fits
+    template: fcr/v%(visit)d_%(ccd)s_f%(filter)s.fcr.fits
 
 calibrations:
   bias:
-    columns: date
+    columns:
+    - date
     level: Ccd
     obsTimeName: date
-    persistable: DecoratedImageF
-    python: lsst.afw.image.DecoratedImageF
+    persistable: ExposureF
+    python: lsst.afw.image.ExposureF
     refCols:
     - visit
-    - filter
     reference: raw_visit
     storage: FitsStorage
     tables: bias
     template: bias/%(calibDate)s/bias-%(ccd)s-%(calibDate)s.fits
-    validEndName: validEnd
     validRange: true
-    validStartName: validStart
   dark:
-    columns: date
+    columns:
+    - date
     level: Ccd
     obsTimeName: date
-    persistable: DecoratedImageF
-    python: lsst.afw.image.DecoratedImageF
+    persistable: ExposureF
+    python: lsst.afw.image.ExposureF
     refCols:
     - visit
-    - filter
     reference: raw_visit
     storage: FitsStorage
     tables: dark
     template: dark/%(calibDate)s/dark-%(ccd)s-%(calibDate)s.fits
-    validEndName: validEnd
     validRange: true
-    validStartName: validStart
   flat:
     columns:
-    - filter
     - date
+    - filter
     filter: true
     level: Ccd
     obsTimeName: date
-    persistable: DecoratedImageF
-    python: lsst.afw.image.DecoratedImageF
+    persistable: ExposureF
+    python: lsst.afw.image.ExposureF
     refCols:
     - visit
     - filter
@@ -120,18 +98,16 @@ calibrations:
     storage: FitsStorage
     tables: flat
     template: flat/%(filter)s/%(calibDate)s/flat_%(ccd)s-%(filter)s_%(calibDate)s.fits
-    validEndName: validEnd
     validRange: true
-    validStartName: validStart
   fringe:
     columns:
-    - filter
     - date
+    - filter
     filter: true
     level: Ccd
     obsTimeName: date
-    persistable: MaskedImageF
-    python: lsst.afw.image.MaskedImageF
+    persistable: ExposureF
+    python: lsst.afw.image.ExposureF
     refCols:
     - visit
     - filter
@@ -139,9 +115,7 @@ calibrations:
     storage: FitsStorage
     tables: flat
     template: fringe/%(filter)s/%(calibDate)s/fringe_%(ccd)s-%(filter)s_%(calibDate)s.fits
-    validEndName: validEnd
     validRange: true
-    validStartName: validStart
 
 datasets:
   IngestIndexedReferenceTask_config:
@@ -379,7 +353,7 @@ datasets:
     python: lsst.daf.base.propertyList
     storage: FitsStorage
     tables: raw
-    template: raw/%(run)s/%(raft)s/%(ccd)s/%(raft)s-%(ccd)s-%(visit)06d.fits[0]
+    template: raw/%(run)s/%(ccd)s/%(ccd)s-%(visit)06d.fits[0]
   refcat:
     persistable: SimpleCatalog
     python: lsst.afw.table.SimpleCatalog
