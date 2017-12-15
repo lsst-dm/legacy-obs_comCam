@@ -402,3 +402,10 @@ datasets:
     storage: FitsCatalogStorage
     tables: raw
     template: schema/transformed_src.fits
+  eotest_gain:  # set of amplifier gains, as measured by eotest
+    level: Ccd
+    persistable: ignored
+    python: dict
+    storage: PickleStorage
+    tables: raw
+    template: gain/%(run)s/gain%(ccd)s_%(run)s.pickle
