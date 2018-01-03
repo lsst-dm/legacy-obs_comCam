@@ -28,6 +28,7 @@ import os
 import lsst.afw.image.utils as afwImageUtils
 import lsst.afw.geom as afwGeom
 import lsst.afw.image as afwImage
+from lsst.afw.fits import readMetadata
 from lsst.obs.base import CameraMapper, MakeRawVisitInfo
 import lsst.daf.persistence as dafPersist
 
@@ -231,7 +232,7 @@ class ComCamMapper(CameraMapper):
 
     def bypass_raw_visitInfo(self, datasetType, pythonType, location, dataId):
         if False:
-            # afwImage.readMetadata() doesn't honour [hdu] suffixes in filenames
+            # lsst.afw.fits.readMetadata() doesn't honour [hdu] suffixes in filenames
             #
             # We could workaround this by moving the "else" block into obs_base,
             # or by changing afw
@@ -245,9 +246,9 @@ class ComCamMapper(CameraMapper):
             mat = re.search(r"\[(\d+)\]$", fileName)
             if mat:
                 hdu = int(mat.group(1))
-                md = afwImage.readMetadata(fileName, hdu=hdu)
+                md = readMetadata(fileName, hdu=hdu)
             else:
-                md = afwImage.readMetadata(fileName)  # or hdu = INT_MIN; -(1 << 31)
+                md = readMetadata(fileName)  # or hdu = INT_MIN; -(1 << 31)
 
             return afwImage.VisitInfo(md)
 
