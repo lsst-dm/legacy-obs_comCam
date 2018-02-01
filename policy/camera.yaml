@@ -124,99 +124,99 @@ CCDs : &CCDs
              hdu : 1
              flipXY : [True, False]
              ixy : [0, 0]
-             gain : 1.093
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "11": &A11
              <<: *A10
              hdu : 2
              ixy : [1, 0]
-             gain : 1.047
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "12": &A12
              <<: *A10
              hdu : 3
              ixy : [2, 0]
-             gain : 1.048
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "13": &A13
              <<: *A10
              hdu : 4
              ixy : [3, 0]
-             gain : 2.826
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "14": &A14
              <<: *A10
              hdu : 5
              ixy : [4, 0]
-             gain : 1.059
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "15": &A15
              <<: *A10
              hdu : 6
              ixy : [5, 0]
-             gain : 1.014
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "16": &A16
              <<: *A10
              hdu : 7
              ixy : [6, 0]
-             gain : 1.071
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "17": &A17
              <<: *A10
              hdu : 8
              ixy : [7, 0]
              gain : 1.000
-             readNoise : 6.66
+             readNoise : 10.000
            "07": &A07
              <<: *AMP
              hdu : 9
              flipXY : [False, True]
              ixy : [7, 1]
-             gain : 1.111
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "06": &A06
              <<: *A07
              hdu : 10
              ixy : [6, 1]
-             gain : 1.127
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "05": &A05
              <<: *A07
              hdu : 11
              ixy : [5, 1]
-             gain : 1.019
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "04": &A04
              <<: *A07
              hdu : 12
              ixy : [4, 1]
-             gain : 1.110
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "03": &A03
              <<: *A07
              hdu : 13
              ixy : [3, 1]
-             gain : 1.090
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "02": &A02
              <<: *A07
              hdu : 14
              ixy : [2, 1]
-             gain : 1.106
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "01": &A01
              <<: *A07
              hdu : 15
              ixy : [1, 1]
-             gain : 1.097
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "00": &A00
              <<: *A07
              hdu : 16
              ixy : [0, 1]
-             gain : 1.048
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
 
    S01: &S01                            # Sensor (0, 1)
       << : *S00
@@ -228,68 +228,68 @@ CCDs : &CCDs
            # read noise is a total fake
            "10":
              <<: *A10
-             gain : 1.021
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "11":
              <<: *A11
-             gain : 0.832
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "12":
              <<: *A12
-             gain : 0.816
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "13":
              <<: *A13
-             gain : 0.891
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "14":
              <<: *A14
-             gain : 0.545
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "15":
              <<: *A15
-             gain : 0.677
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "16":
              <<: *A16
-             gain : 0.923
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "17":
              <<: *A17
-             gain : 0.858
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "07":
              <<: *A07
-             gain : 0.681
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "06":
              <<: *A06
-             gain : 0.582
-             readNoise : 8.66
+             gain : 1.000
+             readNoise : 10.000
            "05":
              <<: *A05
-             gain : 0.710
-             readNoise : 8.66
+             gain : 1.000
+             readNoise : 10.000
            "04":
              <<: *A04
-             gain : 0.721
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "03":
              <<: *A03
-             gain : 0.747
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "02":
              <<: *A02
-             gain : 0.762
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "01":
              <<: *A01
-             gain : 0.712
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "00":
              <<: *A00
-             gain : 0.750
-             readNoise : 7.66
+             gain : 1.000
+             readNoise : 10.000
              
    S02: &S02                            # Sensor (0, 2)
       << : *S00
@@ -301,68 +301,68 @@ CCDs : &CCDs
            # read noise is a total fake
            "10":
              <<: *A10
-             gain : 1.079
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "11":
              <<: *A11
-             gain : 1.063
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "12":
              <<: *A12
-             gain : 0.969
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "13":
              <<: *A13
-             gain : 3.021
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "14":
              <<: *A14
-             gain :  1.032
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "15":
              <<: *A15
-             gain : 1.032
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "16":
              <<: *A16
-             gain: 0.997
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "17":
              <<: *A17
-             gain : 0.997
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "07":
              <<: *A07
-             gain : 5.024
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "06":
              <<: *A06
-             gain : 1.014
-             readNoise : 8.66
+             gain : 1.000
+             readNoise : 10.000
            "05":
              <<: *A05
-             gain : 1.068
-             readNoise : 8.66
+             gain : 1.000
+             readNoise : 10.000
            "04":
              <<: *A04
-             gain: 1.079
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "03":
              <<: *A03
-             gain : 1.057
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "02":
              <<: *A02
-             gain: 1.064
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "01":
              <<: *A01
-             gain : 1.079
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "00":
              <<: *A00
-             gain : 1.072
-             readNoise : 7.66
+             gain : 1.000
+             readNoise : 10.000
              
    S10: &S10                            # Sensor (1, 0)
       << : *S00
@@ -374,68 +374,68 @@ CCDs : &CCDs
            # read noise is a total fake
            "10":
              <<: *A10
-             gain : 5.673
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "11":
              <<: *A11
-             gain : 0.204
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "12":
              <<: *A12
-             gain : 0.678
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "13":
              <<: *A13
-             gain : 6.011
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "14":
              <<: *A14
-             gain : 0.366
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "15":
              <<: *A15
-             gain : 0.517
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "16":
              <<: *A16
-             gain : 0.804
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "17":
              <<: *A17
-             gain : 1.629
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "07":
              <<: *A07
-             gain : 1.231
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "06":
              <<: *A06
-             gain : 1.257
-             readNoise : 8.66
+             gain : 1.000
+             readNoise : 10.000
            "05":
              <<: *A05
-             gain : 1.224
-             readNoise : 8.66
+             gain : 1.000
+             readNoise : 10.000
            "04":
              <<: *A04
-             gain : 1.168
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "03":
              <<: *A03
-             gain : 1.149
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "02":
              <<: *A02
-             gain : 1.194
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "01":
              <<: *A01
-             gain : 1.273
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "00":
              <<: *A00
-             gain : 1.275
-             readNoise : 7.66
+             gain : 1.000
+             readNoise : 10.000
 
    S11: &S11                            # Sensor (1, 1)
       << : *S00
@@ -447,68 +447,68 @@ CCDs : &CCDs
            # read noise is a total fake
            "10":
              <<: *A10
-             gain : 0.793
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "11":
              <<: *A11
-             gain : 0.920
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "12":
              <<: *A12
-             gain : 0.863
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "13":
              <<: *A13
-             gain : 5.894
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "14":
              <<: *A14
-             gain : 0.764
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "15":
              <<: *A15
-             gain : 0.807
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "16":
              <<: *A16
-             gain : 0.866
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "17":
              <<: *A17
-             gain : 0.838
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "07":
              <<: *A07
-             gain : 0.010
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "06":
              <<: *A06
-             gain : 0.033
-             readNoise : 8.66
+             gain : 1.000
+             readNoise : 10.000
            "05":
              <<: *A05
-             gain : 0.036
-             readNoise : 8.66
+             gain : 1.000
+             readNoise : 10.000
            "04":
              <<: *A04
-             gain : 0.026
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "03":
              <<: *A03
-             gain : 0.031
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "02":
              <<: *A02
-             gain : 0.062
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "01":
              <<: *A01
-             gain : 0.091
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "00":
              <<: *A00
-             gain : 0.118
-             readNoise : 7.66
+             gain : 1.000
+             readNoise : 10.000
              
    S12: &S12                            # Sensor (1, 2)
       << : *S00
@@ -520,68 +520,68 @@ CCDs : &CCDs
            # read noise is a total fake
            "10":
              <<: *A10
-             gain : 1.027
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "11":
              <<: *A11
-             gain : 1.005
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "12":
              <<: *A12
-             gain : 1.041
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "13":
              <<: *A13
-             gain : 1.050
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "14":
              <<: *A14
-             gain : 1.023
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "15":
              <<: *A15
-             gain : 1.012
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "16":
              <<: *A16
-             gain : 1.001
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "17":
              <<: *A17
-             gain : 0.620
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "07":
              <<: *A07
-             gain : 0.822
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "06":
              <<: *A06
-             gain : 1.085
-             readNoise : 8.66
+             gain : 1.000
+             readNoise : 10.000
            "05":
              <<: *A05
-             gain : 1.105
-             readNoise : 8.66
+             gain : 1.000
+             readNoise : 10.000
            "04":
              <<: *A04
-             gain : 1.063
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "03":
              <<: *A03
-             gain : 1.048
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "02":
              <<: *A02
-             gain : 1.062
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "01":
              <<: *A01
-             gain : 1.022
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "00":
              <<: *A00
-             gain : 1.082
-             readNoise : 7.66
+             gain : 1.000
+             readNoise : 10.000
 
    S20: &S20                            # Sensor (2, 0)
       << : *S00
@@ -593,68 +593,68 @@ CCDs : &CCDs
            # read noise is a total fake
            "10":
              <<: *A10
-             gain : 0.000
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "11":
              <<: *A11
-             gain : 0.966
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "12":
              <<: *A12
-             gain : 0.893
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "13":
              <<: *A13
-             gain : 2.221
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "14":
              <<: *A14
-             gain : 0.797
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "15":
              <<: *A15
-             gain : 0.849
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "16":
              <<: *A16
-             gain : 0.913
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "17":
              <<: *A17
-             gain : 8.473
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "07":
              <<: *A07
-             gain : 0.831
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "06":
              <<: *A06
-             gain : 0.908
-             readNoise : 8.66
+             gain : 1.000
+             readNoise : 10.000
            "05":
              <<: *A05
-             gain : 0.998
-             readNoise : 8.66
+             gain : 1.000
+             readNoise : 10.000
            "04":
              <<: *A04
-             gain : 1.023
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "03":
              <<: *A03
-             gain : 1.042
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "02":
              <<: *A02
-             gain : 1.015
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "01":
              <<: *A01
-             gain : 0.944
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "00":
              <<: *A00
-             gain : 0.910
-             readNoise : 7.66
+             gain : 1.000
+             readNoise : 10.000
 
    S21: &S21                            # Sensor (2, 1)
       << : *S00
@@ -666,68 +666,68 @@ CCDs : &CCDs
            # read noise is a total fake
            "10":
              <<: *A10
-             gain : 0.000
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "11":
              <<: *A11
-             gain : 0.933
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "12":
              <<: *A12
-             gain : 0.940
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "13":
              <<: *A13
-             gain : 0.783
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "14":
              <<: *A14
-             gain : 0.939
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "15":
              <<: *A15
-             gain : 0.628
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "16":
              <<: *A16
-             gain : 0.914
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "17":
              <<: *A17
-             gain : 0.125
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "07":
              <<: *A07
-             gain : 0.904
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "06":
              <<: *A06
-             gain : 0.942
-             readNoise : 8.66
+             gain : 1.000
+             readNoise : 10.000
            "05":
              <<: *A05
-             gain : 0.954
-             readNoise : 8.66
+             gain : 1.000
+             readNoise : 10.000
            "04":
              <<: *A04
-             gain : 0.961
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "03":
              <<: *A03
-             gain : 0.953
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "02":
              <<: *A02
-             gain : 0.961
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "01":
              <<: *A01
-             gain : 1.009
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "00":
              <<: *A00
-             gain : 0.993
-             readNoise : 7.66
+             gain : 1.000
+             readNoise : 10.000
              
    S22: &S22                            # Sensor (2, 2)
       << : *S00
@@ -739,65 +739,65 @@ CCDs : &CCDs
            # read noise is a total fake
            "10":
              <<: *A10
-             gain : 3.491
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "11":
              <<: *A11
-             gain : 1.812
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "12":
              <<: *A12
-             gain : 0.076
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "13":
              <<: *A13
-             gain : 1.970
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "14":
              <<: *A14
-             gain : 0.031
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "15":
              <<: *A15
-             gain : 3.621
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "16":
              <<: *A16
-             gain : 0.000
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "17":
              <<: *A17
-             gain : 0.000
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "07":
              <<: *A07
-             gain : 0.680
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "06":
              <<: *A06
-             gain : 0.518
-             readNoise : 8.66
+             gain : 1.000
+             readNoise : 10.000
            "05":
              <<: *A05
-             gain : 0.627
-             readNoise : 8.66
+             gain : 1.000
+             readNoise : 10.000
            "04":
              <<: *A04
-             gain : 0.637
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "03":
              <<: *A03
-             gain : 0.639
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "02":
              <<: *A02
-             gain : 0.612
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "01":
              <<: *A01
-             gain : 0.523
-             readNoise : 6.66
+             gain : 1.000
+             readNoise : 10.000
            "00":
              <<: *A00
-             gain : 0.438
-             readNoise : 7.66
+             gain : 1.000
+             readNoise : 10.000
