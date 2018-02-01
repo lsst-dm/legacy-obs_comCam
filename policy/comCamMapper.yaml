@@ -117,6 +117,31 @@ calibrations:
     template: fringe/%(filter)s/%(calibDate)s/fringe_%(ccd)s-%(filter)s_%(calibDate)s.fits
     validRange: true
 
+  bias_camera:
+    template: focalplane/bias/%(calibDate)s/bias-%(ccd)s-%(calibDate)s.fits
+    persistable: ExposureF
+    python: lsst.afw.image.ExposureF
+    storage: FitsStorage
+    level: None
+  dark_camera:
+    template: focalplane/dark/%(calibDate)s/dark-%(ccd)s-%(calibDate)s.fits
+    persistable: ExposureF
+    python: lsst.afw.image.ExposureF
+    storage: FitsStorage
+    level: None
+  flat_camera:
+    template: focalplane/flat/%(filter)s/%(calibDate)s/flat_%(ccd)s-%(filter)s_%(calibDate)s.fits
+    persistable: ExposureF
+    python: lsst.afw.image.ExposureF
+    storage: FitsStorage
+    level: None
+  fringe_camera:
+    template: focalplane/fringe/%(filter)s/%(calibDate)s/fringe_%(ccd)s-%(filter)s_%(calibDate)s.fits
+    persistable: ExposureF
+    python: lsst.afw.image.ExposureF
+    storage: FitsStorage
+    level: None
+
 datasets:
   IngestIndexedReferenceTask_config:
     persistable: Config
