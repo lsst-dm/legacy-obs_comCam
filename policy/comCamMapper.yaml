@@ -434,3 +434,5 @@ datasets:
     storage: PickleStorage
     tables: raw
     template: gain/%(run)s/gain%(ccd)s_%(run)s.pickle
+  apPipe_metadata:
+    template: apPipe_metadata/v%(visit)d_f%(filter)s.boost
