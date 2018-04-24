@@ -28,9 +28,6 @@ exposures:
     level: Amp
     # NB If type is changed to an exposureI then constructDark breaks. If changing this be sure to test calibs
     persistable: DecoratedImageI
-    python: lsst.afw.image.DecoratedImageI
-    storage: FitsStorage
-    tables: raw
     template: raw/%(run)s/%(ccd)s/%(ccd)s-%(visit)06d.fits[%(channel)d]
   postISRCCD:
     template: 'postISRCCD/postISRCCD_v%(visit)d_%(ccd)s_f%(filter)s.fits'
