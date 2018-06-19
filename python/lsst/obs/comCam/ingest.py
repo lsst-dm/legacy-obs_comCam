@@ -81,7 +81,7 @@ class ComCamParseTask(ParseTask):
         wavelength : `int`
             The recorded wavelength as an int
         """
-        raw_wl = md.get("MONOWL")
+        raw_wl = md.getScalar("MONOWL")
         wl = int(round(raw_wl))
         if abs(raw_wl-wl) >= 0.1:
             logger = lsstLog.Log.getLogger('obs.comCam.ingest')
@@ -104,7 +104,7 @@ class ComCamParseTask(ParseTask):
         visit_num : `int`
             Visit number, as translated
         """
-        mjd = md.get("MJD-OBS")
+        mjd = md.getScalar("MJD-OBS")
         mmjd = mjd - 55197              # relative to 2010-01-01, just to make the visits a tiny bit smaller
         return int(1e5*mmjd)            # 86400s per day, so we need this resolution
 
@@ -116,7 +116,7 @@ class ComCamCalibsParseTask(CalibsParseTask):
 
     def _translateFromCalibId(self, field, md):
         """Get a value from the CALIB_ID written by constructCalibs"""
-        data = md.get("CALIB_ID")
+        data = md.getScalar("CALIB_ID")
         match = re.search(".*%s=(\S+)" % field, data)
         return match.groups()[0]
 
