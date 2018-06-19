@@ -2,6 +2,11 @@
 *.pyc
 .scon*
 _build.*
+.cache
+.pytest_cache
+pytest_session.txt
+.coverage
+tests/.tests
 config.log
 ups/*.cfgc
 python/lsst/obs/comCam/version.py
