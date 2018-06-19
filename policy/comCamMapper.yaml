@@ -436,3 +436,9 @@ datasets:
     template: gain/%(run)s/gain%(ccd)s_%(run)s.pickle
   apPipe_metadata:
     template: apPipe_metadata/v%(visit)d_f%(filter)s.yaml
+  brighterFatterKernel:
+    template: calibrations/brighterFatterKernel-%(ccd)03d.pkl
+  brighterFatterGain:
+    template: calibrations/brighterFatterGain-%(ccd)03d.pkl
+  plotBrighterFatterPtc:
+    template: plots/brighterFatterPtc-ccd-%(ccd)03d-amp-%(amp)s.png
