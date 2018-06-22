@@ -20,7 +20,7 @@ class ComCamParseTask(ParseTask):
     def getInfo(self, filename):
         """ Get the basename and other data which is only available from the filename/path.
 
-        This seems fragile, but this is how the teststand data will *always* be written out, 
+        This seems fragile, but this is how the teststand data will *always* be written out,
         as the software has been "frozen" as they are now in production mode.
 
         Parameters
@@ -51,11 +51,11 @@ class ComCamParseTask(ParseTask):
         if runId != phuInfo['run']:
             raise RuntimeError("Expected runId %s, found %s from path %s" % phuInfo['run'], runId, pathname)
 
-        phuInfo['raftId'] = raftId # also in the header - RAFTNAME
-        phuInfo['field'] = acquisitionType # NOT in the header
-        phuInfo['jobId'] = int(jobId) #  NOT in the header
+        phuInfo['raftId'] = raftId  # also in the header - RAFTNAME
+        phuInfo['field'] = acquisitionType  # NOT in the header
+        phuInfo['jobId'] = int(jobId)  # NOT in the header
         phuInfo['raft'] = 'R00'
-        phuInfo['ccd'] = sensorLocationInRaft # NOT in the header
+        phuInfo['ccd'] = sensorLocationInRaft  # NOT in the header
 
         return phuInfo, infoList
 
@@ -81,12 +81,13 @@ class ComCamParseTask(ParseTask):
         wavelength : `int`
             The recorded wavelength as an int
         """
-        raw_wl = md.get("MONOWL")
+        raw_wl = md.getScalar("MONOWL")
         wl = int(round(raw_wl))
         if abs(raw_wl-wl) >= 0.1:
             logger = lsstLog.Log.getLogger('obs.comCam.ingest')
             logger.warn(
-                'Translated significantly non-integer wavelength; %s is more than 0.1nm from an integer value', raw_wl)
+                'Translated significantly non-integer wavelength; '
+                '%s is more than 0.1nm from an integer value', raw_wl)
         return wl
 
     def translate_visit(self, md):
@@ -104,11 +105,9 @@ class ComCamParseTask(ParseTask):
         visit_num : `int`
             Visit number, as translated
         """
-        mjd = md.get("MJD-OBS")
+        mjd = md.getScalar("MJD-OBS")
         mmjd = mjd - 55197              # relative to 2010-01-01, just to make the visits a tiny bit smaller
         return int(1e5*mmjd)            # 86400s per day, so we need this resolution
-
-##############################################################################################################
 
 
 class ComCamCalibsParseTask(CalibsParseTask):
@@ -116,7 +115,7 @@ class ComCamCalibsParseTask(CalibsParseTask):
 
     def _translateFromCalibId(self, field, md):
         """Get a value from the CALIB_ID written by constructCalibs"""
-        data = md.get("CALIB_ID")
+        data = md.getScalar("CALIB_ID")
         match = re.search(".*%s=(\S+)" % field, data)
         return match.groups()[0]
 
