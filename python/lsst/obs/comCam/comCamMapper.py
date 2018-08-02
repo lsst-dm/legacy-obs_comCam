@@ -273,7 +273,8 @@ class ComCamMapper(CameraMapper):
 
         Since we have no defects, return an empty list. Fix this when defects exist.
         """
-        return [afwImage.DefectBase(afwGeom.Box2I(afwGeom.Point2I(x0, y0), afwGeom.Point2I(x1, y1))) for
+        return [afwImage.DefectBase(afwGeom.Box2I(afwGeom.Point2I(x0, y0), afwGeom.Point2I(x1, y1)),
+                                    invert=False) for
                 x0, y0, x1, y1 in (
                     # These may be hot pixels, but we'll treat them as bad until we can get more data
                     (3801, 666, 3805, 669),
