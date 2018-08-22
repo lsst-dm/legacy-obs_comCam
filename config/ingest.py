@@ -19,6 +19,7 @@ config.parse.translators = {
 }
 config.parse.defaults = {
     'object': "UNKNOWN",
+    'filter': "NONE",
 }
 config.parse.hdu = 0
 
