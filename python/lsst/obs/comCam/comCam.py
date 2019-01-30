@@ -22,18 +22,15 @@
 from __future__ import division, print_function
 import os.path
 import lsst.utils as utils
-from lsst.obs.base.yamlCamera import YamlCamera
+import lsst.obs.base.yamlCamera as yamlCamera
 
 
-class ComCam(YamlCamera):
-    """The Commissioning Camera (comCam)
+def makeCamera(cameraYamlFile=None):
+    """Make a camera for the Commissioning Camera (comCam)
     """
     packageName = 'obs_comCam'
 
-    def __init__(self, cameraYamlFile=None):
-        """Construct comCam
-        """
-        if not cameraYamlFile:
-            cameraYamlFile = os.path.join(utils.getPackageDir(self.packageName), "policy", "camera.yaml")
+    if not cameraYamlFile:
+        cameraYamlFile = os.path.join(utils.getPackageDir(packageName), "policy", "camera.yaml")
 
-        YamlCamera.__init__(self, cameraYamlFile)
+    return yamlCamera.makeCamera(cameraYamlFile)

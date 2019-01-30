@@ -6,7 +6,7 @@ import lsst.obs.comCam
 
 class ImportTest(unittest.TestCase):
     def testImport(self):
-        self.assertTrue(hasattr(lsst.obs.comCam, "ComCam"))
+        self.assertTrue(hasattr(lsst.obs.comCam, "makeCamera"))
 
 
 class TestMemory(lsst.utils.tests.MemoryTestCase):
