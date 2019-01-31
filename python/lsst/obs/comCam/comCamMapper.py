@@ -32,7 +32,8 @@ from lsst.afw.fits import readMetadata
 from lsst.obs.base import CameraMapper, MakeRawVisitInfo
 import lsst.daf.persistence as dafPersist
 
-from lsst.obs.comCam import ComCam
+from lsst.obs.comCam import makeCamera
+
 
 __all__ = ["ComCamMapper"]
 
@@ -145,7 +146,7 @@ class ComCamMapper(CameraMapper):
 
     def _makeCamera(self, policy, repositoryDir):
         """Make a camera (instance of lsst.afw.cameraGeom.Camera) describing the camera geometry."""
-        return ComCam()
+        return makeCamera()
 
     def _extractDetectorName(self, dataId):
         return dataId["ccd"]
